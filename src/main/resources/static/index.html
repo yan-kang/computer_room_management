@@ -25,9 +25,14 @@
 									<span class="symbol"><img src="images/logo.svg" alt="" /></span>
 								</a>
 							<div class="logo">
-							<span class="title">机房列表 </span>
-							<span id="sss" class="title" th:text="${time}"></span>
+							<span class="title">机房列表&nbsp&nbsp</span>
 							</div>
+							<span class="logo">
+								<span class="symbol" ><img src="images/绿.png" alt="" style="border-radius: 8px"/></span><span>空闲 </span>
+								<span class="symbol"><img src="images/蓝.png" alt="" style="border-radius: 8px"/></span><span>机位空闲 </span>
+								<span class="symbol"><img src="images/粉.png" alt="" style="border-radius: 8px"/></span><span>不可用&nbsp&nbsp</span>
+								<span id="sss" class="title" th:text="${time}"></span>
+							</span>
 							<!-- Nav -->
 								<nav>
 									<ul>
@@ -69,15 +74,14 @@
 <!--										</div>-->
 <!--									</a>-->
 <!--								</article>-->
-									<article th:each="roomShow: ${roomShowList}" th:class="${roomShow.getStyle()}">
+									<article th:each="roomShow: ${roomShowList}" th:class="${roomShow.getStyle()}" th:onclick="'showComputerRooms(\''+${roomShow.getRid()}+'\')'">
 										<span class="image">
 											<img th:src="${roomShow.getPath()}" alt="" />
 										</span>
-										<a href="/showroom">
+										<a>
 											<h2 th:text="${roomShow.getShowId()}"></h2>
 											<div class="content">
-												<input type="hidden" th:value="${roomShow.getRid()}" name="rid">
-												<p th:text="${roomShow.getDescription}">Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+												<p th:text="${roomShow.getDescription}" id="tt"></p>
 											</div>
 										</a>
 									</article>
@@ -89,7 +93,7 @@
 					<footer id="footer">
 						<div class="inner">
 							<ul class="copyright">
-								<li>&copy; Kang. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Kang. All rights reserved</li>
 							</ul>
 						</div>
 					</footer>
@@ -103,7 +107,7 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 <script>
-	Date.prototype.Format = function (fmt) { // 日前格式化函数
+	Date.prototype.Format = function (fmt) { // 日期格式化函数
 		var o = {
 			"M+": this.getMonth() + 1, // 月份
 			"d+": this.getDate(), // 日
@@ -144,6 +148,33 @@
 }
 var interval_online = setInterval(refresh,1000);//1秒刷新一次时间
 </script>
+	<script>
+		function showComputerRooms(rid) {
+			var jsonModel={
+				"rid":rid
+			}
+			$.ajax({
+				url: "/queryComputers",
+				type: 'post',
+				data: jsonModel,
+				async: false,
+				success:function (data) {
+					if(data!=null){
+						var code=JSON.parse(data);
+						if(code.code===1){
+							console.log("机房不可预约");
+						}else if(code.code===2){
+							console.log("可预约机位");
+							window.location="/showComputersPage";
+						}
+						else{
+							console.log("机房可预约");
+						}
+					}
+				}
+			})
+		}
+	</script>
 
 	</body>
 </html>

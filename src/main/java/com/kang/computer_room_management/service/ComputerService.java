@@ -9,8 +9,13 @@ import com.kang.computer_room_management.mapper.ComputerMapper;
 import com.kang.computer_room_management.mapper.ComputerRoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -67,5 +72,28 @@ public class ComputerService implements IComputerService {
         ComputerExample computerExample=new ComputerExample();
         computerExample.createCriteria().andCstatusEqualTo(1).andRidEqualTo(roomId);
         return computerMapper.countByExample(computerExample);
+    }
+
+    @Override
+    public String queryComputersIn(Integer rid, HttpServletRequest httpServletRequest) {
+        int code=(computerRoomMapper.selectByPrimaryKey(rid)).getRstatus();
+        HttpSession httpSession=httpServletRequest.getSession();
+        httpSession.setAttribute("nowRoom",rid);
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String showComputers(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession=httpServletRequest.getSession();
+        return "{\"rid\":"+httpSession.getAttribute("nowRoom")+"}";
+    }
+
+    @Override
+    public String showComputersPage(Model model) {
+        Date date=new Date();
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+        simpleDateFormat.applyPattern("MM月dd日 HH:mm:ss");
+        model.addAttribute("time",simpleDateFormat.format(date));
+        return "showComputers";
     }
 }

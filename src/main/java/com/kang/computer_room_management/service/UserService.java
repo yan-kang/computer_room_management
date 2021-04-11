@@ -142,7 +142,6 @@ public class UserService implements IUserService {
             }
             model.addAttribute("msg", msg);
             return "{\"code\":"+a+",\"msg\":\""+msg+"\"}";
-           // return success ? "{\"code\":\"success\"}" : "{\"error\":\""+msg+"\",\"code\":\"fail\"}";
         }
         else{
             return "redirect:/register";

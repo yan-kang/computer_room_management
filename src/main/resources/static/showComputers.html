@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head >
+    <title>机房详情</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <script>
+    function showC() {
+        var jsonModel={
+        }
+        $.ajax({
+            url: "/showComputers",
+            type: 'post',
+            data: jsonModel,
+            async: true,
+            success:function (data) {
+                if(data!=null){
+                    var d1=JSON.parse(data);
+                    console.log(d1.rid)
+                    $("#test").html(   " <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
+                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
+                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
+                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
+                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
+                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n"
+                )
+                }
+            }
+        })
+
+    }
+    </script>
+</head>
+<body class="is-preload" onload="showC();">
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Header -->
+    <header id="header">
+        <div class="inner">
+
+            <!-- Logo -->
+            <a href="/" class="logo">
+                <span class="symbol"><img src="images/logo.svg" alt="" /></span>
+            </a>
+            <div class="logo">
+                <span class="title">机房列表&nbsp&nbsp </span>
+            </div>
+            <span class="logo">
+                <span class="symbol" ><img src="images/绿.png" alt="" style="border-radius: 8px"/></span><span>空闲 </span>
+                <span class="symbol"><img src="images/粉.png" alt="" style="border-radius: 8px"/></span><span>使用中&nbsp&nbsp</span>
+                <span id="sss" class="title" th:text="${time}"></span>
+            </span>
+            <!-- Nav -->
+            <nav>
+                <ul>
+                    <li><a href="#menu">Menu</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+    <!-- Menu -->
+    <nav id="menu">
+        <h2><span th:text="${uname}"></span> </h2>
+        <h5><span th:text="${uprofile}"></span></h5><br>
+        <ul>
+            <li><a href="/">首页</a></li>
+            <li><a href="generic.html">我的订单</a></li>
+            <li><a href="generic.html">预约记录</a></li>
+            <li><a href="generic.html">个人中心</a></li>
+            <li><a href="/logOut">退出登录</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <header>
+                <span id="test">
+                </span>
+            </header>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="copyright">
+                <li>&copy; Kang. All rights reserved</li>
+            </ul>
+        </div>
+    </footer>
+</div>
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+    Date.prototype.Format = function (fmt) { // 日期格式化函数
+        var o = {
+            "M+": this.getMonth() + 1, // 月份
+            "d+": this.getDate(), // 日
+            "H+": this.getHours(), // 小时
+            "m+": this.getMinutes(), // 分
+            "s+": this.getSeconds(), // 秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+            "S": this.getMilliseconds(), // 毫秒
+            "E":this.getDay()//星期
+        };
+        if (/(y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+    function refresh(){
+        //js获取时间
+        var myDate=new Date().Format("MM月dd日 HH:mm:ss");
+        $("#sss").html(myDate);
+    }
+ var nowTime=setInterval(refresh,1000);
+</script>
+</body>
+</html>
