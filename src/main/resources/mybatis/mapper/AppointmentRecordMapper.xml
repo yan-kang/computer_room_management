@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kang.computer_room_management.mapper.AppointmentRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.kang.computer_room_management.common.domain.AppointmentRecord" >
+    <id column="reqdate" property="reqdate" jdbcType="TIMESTAMP" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="rid" property="rid" jdbcType="INTEGER" />
+    <result column="arstatus" property="arstatus" jdbcType="INTEGER" />
+    <result column="dealdate" property="dealdate" jdbcType="TIMESTAMP" />
+    <result column="artype" property="artype" jdbcType="INTEGER" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    reqdate, uid, rid, arstatus, dealdate, artype, cid
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecordExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from appointment_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Date" >
+    select 
+    <include refid="Base_Column_List" />
+    from appointment_record
+    where reqdate = #{reqdate,jdbcType=TIMESTAMP}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.util.Date" >
+    delete from appointment_record
+    where reqdate = #{reqdate,jdbcType=TIMESTAMP}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecordExample" >
+    delete from appointment_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecord" >
+    insert into appointment_record (reqdate, uid, rid, 
+      arstatus, dealdate, artype, 
+      cid)
+    values (#{reqdate,jdbcType=TIMESTAMP}, #{uid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, 
+      #{arstatus,jdbcType=INTEGER}, #{dealdate,jdbcType=TIMESTAMP}, #{artype,jdbcType=INTEGER}, 
+      #{cid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecord" >
+    insert into appointment_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="reqdate != null" >
+        reqdate,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="rid != null" >
+        rid,
+      </if>
+      <if test="arstatus != null" >
+        arstatus,
+      </if>
+      <if test="dealdate != null" >
+        dealdate,
+      </if>
+      <if test="artype != null" >
+        artype,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="reqdate != null" >
+        #{reqdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null" >
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="arstatus != null" >
+        #{arstatus,jdbcType=INTEGER},
+      </if>
+      <if test="dealdate != null" >
+        #{dealdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="artype != null" >
+        #{artype,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecordExample" resultType="java.lang.Integer" >
+    select count(*) from appointment_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update appointment_record
+    <set >
+      <if test="record.reqdate != null" >
+        reqdate = #{record.reqdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.uid != null" >
+        uid = #{record.uid,jdbcType=INTEGER},
+      </if>
+      <if test="record.rid != null" >
+        rid = #{record.rid,jdbcType=INTEGER},
+      </if>
+      <if test="record.arstatus != null" >
+        arstatus = #{record.arstatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.dealdate != null" >
+        dealdate = #{record.dealdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.artype != null" >
+        artype = #{record.artype,jdbcType=INTEGER},
+      </if>
+      <if test="record.cid != null" >
+        cid = #{record.cid,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update appointment_record
+    set reqdate = #{record.reqdate,jdbcType=TIMESTAMP},
+      uid = #{record.uid,jdbcType=INTEGER},
+      rid = #{record.rid,jdbcType=INTEGER},
+      arstatus = #{record.arstatus,jdbcType=INTEGER},
+      dealdate = #{record.dealdate,jdbcType=TIMESTAMP},
+      artype = #{record.artype,jdbcType=INTEGER},
+      cid = #{record.cid,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecord" >
+    update appointment_record
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="rid != null" >
+        rid = #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="arstatus != null" >
+        arstatus = #{arstatus,jdbcType=INTEGER},
+      </if>
+      <if test="dealdate != null" >
+        dealdate = #{dealdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="artype != null" >
+        artype = #{artype,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where reqdate = #{reqdate,jdbcType=TIMESTAMP}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecord" >
+    update appointment_record
+    set uid = #{uid,jdbcType=INTEGER},
+      rid = #{rid,jdbcType=INTEGER},
+      arstatus = #{arstatus,jdbcType=INTEGER},
+      dealdate = #{dealdate,jdbcType=TIMESTAMP},
+      artype = #{artype,jdbcType=INTEGER},
+      cid = #{cid,jdbcType=INTEGER}
+    where reqdate = #{reqdate,jdbcType=TIMESTAMP}
+  </update>
+</mapper>

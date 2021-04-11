@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <title>Title</title>
+</head>
+<body>
+<!-- Button trigger modal -->
+<!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">-->
+<!--    Launch demo modal-->
+<!--</button>-->
+<div id="tt"></div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="tips">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div><button type="button" id="btn" onclick="btnClick();">点击</button> </div>
+<input type="text" value="" id="name" onblur="inputTest();"><span id="er" style="color: red"></span>
+<input type="text" id="ps" onclick="inputTest();" >
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script> 
+<script>
+    function btnClick() {
+        $("#tt").html("<div class=\"modal-dialog\" role=\"document\">\n" +
+            "        <div class=\"modal-content\">\n" +
+            "            <div class=\"modal-header\">\n" +
+            "                <h5 class=\"modal-title\" id=\"exampleModalLabel\">Modal title</h5>\n" +
+            "                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n" +
+            "                    <span aria-hidden=\"true\">&times;</span>\n" +
+            "                </button>\n" +
+            "            </div>\n" +
+            "            <div class=\"modal-body\" id=\"tips\">\n" +
+            "            </div>\n" +
+            "            <div class=\"modal-footer\">\n" +
+            "                <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\n" +
+            "                <button type=\"button\" class=\"btn btn-primary\">Save changes</button>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "    </div>");
+    }
+    function inputTest() {
+        var name=document.getElementById("name").value;
+        if(name===""){
+            $("#er").html("用户名为空")
+        }else if(name.length<5){
+            $("#er").html("用户名长度太短")
+        }else {
+            $("#tips").html("document.getElementById("+name+").value")
+            $("#er").html("<span class=\"symbol\"><img src=\"logo.svg\" alt=\"\" /></span>")
+        }
+    }
+</script>
+</body>
+</html>

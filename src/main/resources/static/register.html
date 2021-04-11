@@ -1,0 +1,175 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户注册</title>
+    <!-- Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <style>
+        /*web background*/
+        .container{
+            display:table;
+            height:100%;
+        }
+
+        .row{
+            display: table-cell;
+            vertical-align: middle;
+        }
+        /* centered columns styles */
+        .row-centered {
+            text-align:center;
+        }
+        .col-centered {
+            display:inline-block;
+            float:none;
+            text-align:left;
+            margin-right:-4px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <section>
+                <form method="post">
+                    <div class="row gtr-uniform">
+                        <h2>请注册</h2>
+                        <div class="col-6 col-12">
+                            <input type="text" name="uname" id="uname" value="" placeholder="用户名" onblur="checkName();"
+                                   minlength="5" onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" title="用户名长度不低于5位数字和字母组合" />
+                        </div>
+                        <span id="errname" style="color: red"></span>
+                        <div class="col-6 col-12">
+                            <input type="password" name="upsswd" id="upsswd" value="" placeholder="密码" onblur="checkPassword();"
+                                   minlength="6" onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" title="密码长度不低于6位数字和字母组合"
+                            />
+                            <span id="errpsswd" style="color: red"></span>
+                        </div>
+                        <div class="col-6 col-12">
+                            <input type="password" name="reupsswd" id="reupsswd" value="" placeholder="重复密码" onblur="checkRePassword();"
+                                   minlength="6" onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" title="密码长度不低于6位数字和字母组合"/>
+                            <span id="errrpsswd" style="color: red"></span>
+                        </div>
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="button" value="注册并登录" class="primary small" onclick="myRegister();" id="submitBtn"/></li>
+                                <li><input type="reset" value="重置" class="button small"/></li>
+                                <li><input type="button" class="button small" value="返回" onclick="backTo();"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js">
+
+</script>
+<script>
+    var submitBtn=document.getElementById("submitBtn");
+    submitBtn.disabled=true;
+    var nsuccess=0;
+    var psuccess=0;
+    var repsuccess=0;
+    function checkName() {
+        var uname=document.getElementById("uname").value;
+        if (uname.length<5){
+            $("#errname").html("请检查用户名")
+            nsuccess=0;
+        }else {
+            var modelJson={
+                "uname":uname
+            }
+            $.ajax({
+                url: "/checkName",
+                type: 'post',
+                data:modelJson,  //要发的数据，如果出现格式问题则 JSON.stringify(modeljson)
+                async: true,
+                success: function(data){
+                    if(data!=null){
+                        var isExist=JSON.parse(data);
+                        if(isExist.isExist===1){
+                            nsuccess=0;
+                            $("#errname").html("用户名已存在")
+                        }else {
+                            nsuccess=1;
+                            $("#errname").html("")
+                            if(psuccess===1&&repsuccess===1)
+                                submitBtn.disabled=false;
+                        }
+                    }
+                }
+            })
+        }
+    }
+    function checkPassword() {
+        var upsswd=document.getElementById("upsswd").value;
+        if(upsswd.length<6){
+            $("#errpsswd").html("密码强度低")
+            psuccess=0;
+        }else {
+            $("#errpsswd").html("")
+            psuccess=1;
+        }
+    }
+    function checkRePassword() {
+        var reupsswd=document.getElementById("reupsswd").value;
+        var upsswd=document.getElementById("upsswd").value;
+        if(reupsswd!==upsswd){
+            repsuccess=0;
+            $("#errrpsswd").html("密码不一致");
+        }else {
+            repsuccess=1;
+            $("#errrpsswd").html("")
+            if(nsuccess===1&&psuccess===1)
+            submitBtn.disabled=false;
+        }
+    }
+    function backTo() {
+        window.location="/login"
+    }
+    function myRegister() {
+        var uname=document.getElementById("uname").value;
+        var upsswd=document.getElementById("upsswd").value;
+            var modelJson={
+                "uname":uname,
+                "upsswd":upsswd
+            }
+            $.ajax({
+                url: "/registerAction",
+                type: 'post',
+                data:modelJson,  //要发的数据，如果出现格式问题则 JSON.stringify(modeljson)
+                async: false,
+                success: function(data){
+                    if(data !=null){
+                        var data1=JSON.parse(data);
+                        console.log(data1.code);
+                        if (data1.code===0){
+                            alert(data1.msg);
+                        }
+                        else{
+                            window.location.href="/";
+                        }
+                    }
+                    else {
+                        console.log("data空");
+                    }
+                }
+            })
+    }
+</script>
+</body>
+</html>

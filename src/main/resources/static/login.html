@@ -1,0 +1,156 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户登录</title>
+    <!-- Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <style>
+        /*web background*/
+        .container{
+            display:table;
+            height:100%;
+        }
+
+        .row{
+            display: table-cell;
+            vertical-align: middle;
+        }
+        /* centered columns styles */
+        .row-centered {
+            text-align:center;
+        }
+        .col-centered {
+            display:inline-block;
+            float:none;
+            text-align:left;
+            margin-right:-4px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+<!--            <h2>欢迎登录</h2>-->
+<!--            <form action="/login" method="post" role="form">-->
+<!--                <div class="input-group input-group-md">-->
+<!--                    <span class="input-group-addon" id="sizing-addon1"><i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>-->
+<!--                    <input type="text" class="form-control" id="uname" name="uname" placeholder="请输入用户名"/>-->
+<!--                </div>-->
+<!--                <div class="input-group input-group-md">-->
+<!--                    <span class="input-group-addon" id="sizing-addon1"><i class="glyphicon glyphicon-lock"></i></span>-->
+<!--                    <input type="password" class="form-control" id="upsswd" name="upsswd" placeholder="请输入密码"/>-->
+<!--                </div>-->
+<!--                <input type="checkbox" name="type" value="角色">-->
+<!--                <br/>-->
+<!--                <button type="submit" class="button primary small fit">登录</button><br>-->
+<!--            </form>-->
+<!--            <ul class="actions stacked">-->
+<!--                <li><a href="/register.html" class="button small fit">注册</a></li>-->
+<!--            </ul>-->
+
+            <section>
+                <form method="post">
+                    <div class="row gtr-uniform">
+                        <h2>欢迎登录</h2>
+                        <div class="col-6 col-12">
+                            <input type="text" name="uname" id="uname" value="" placeholder="用户名" />
+                        </div>
+                        <span style="color: red" id="nameerr"></span>
+                        <div class="col-6 col-12">
+                            <input type="password" name="upsswd" id="upsswd" value="" placeholder="密码" />
+                        </div>
+                        <span style="color: red" id="psswderr"></span>
+                        <div class="col-12">
+                            <select name="userType" id="userType">
+                                <option value="">- 用户类型 -</option>
+                                <option value="0" selected>个人用户</option>
+                                <option value="1">管理员</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <ul class="actions">
+                                <li><input type="button" value="登录" class="primary small" id="btn" onclick="buttonClick();"/></li>
+                                <li><input type="button" class="button small" value="注册" onclick="goTo();"/></li>
+                                <li><input type="reset" value="重置" class="button small"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js">
+
+</script> 
+<script>
+    function goTo() {
+        window.location="/register"
+    }
+    var button=document.getElementById("btn");
+    function buttonClick(){
+        var uname=document.getElementById("uname").value
+        var upsswd=document.getElementById("upsswd").value
+        var userType=document.getElementById("userType").value
+        var modelJson={
+            "uname":uname,
+            "upsswd":upsswd,
+            "userType":userType
+        }
+        if(modelJson.uname===""){
+            var error="用户名不能为空"
+            $("#nameerr").html(error);
+        }
+        else {
+            if(modelJson.upsswd===""){
+                $("#psswderr").html("请填写密码");
+            }
+            else{
+                $.ajax({
+                    url: "/loginAction",
+                    type: 'post',
+                    //contentType: 'application/json', //没规定就是默认的application/x-www-form-urlencoded; charset=UTF-8
+                    //格式的问题真的是头大，如果大家出现前端明显送出了数据但是后端取出为null 的时候，
+                    //肯定是格式问题了，建议都用默认格式好了
+
+                    data:modelJson,  //要发的数据，如果出现格式问题则 JSON.stringify(modeljson)
+                    async: false,
+                    success: function(data){
+                        if(data != null){
+                            var a = JSON.parse(data) //必要的
+                            if(a.code!=="success") {
+                                if(a.errorCode===0){
+                                    $("#nameerr").html(a.error)
+                                    $("#psswderr").html("")
+                                }else {
+                                    $("#psswderr").html(a.error)
+                                    $("#nameerr").html("")
+                                }
+                                //$("#sss").html(a.error);
+                            }else{
+                                if(a.admin!=="yes") {
+                                    window.location = "/";
+                                }else{
+                                    window.location="/admin";
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+</script> 
+</body>
+</html>

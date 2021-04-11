@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="C:\Users\kang\.m2\repository\mysql\mysql-connector-java\8.0.23\mysql-connector-java-8.0.23.jar"/>
+    <context id="MySQLTables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+            <property name="suppressDate" value="true" />
+        </commentGenerator>
+        <!--数据库连接-->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/roommana?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull"
+                        userId="root"
+                        password="971112">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!-- -->
+        <javaModelGenerator targetPackage="com.kang.computer_room_management.common.domain" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!--Mapper 生成位置-->
+        <sqlMapGenerator targetPackage="mybatis.mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="com.kang.computer_room_management.mapper"
+                             targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+<!--        <table tableName="admin" domainObjectName="Admin">-->
+<!--        </table>-->
+<!--        <table tableName="appointment_record" domainObjectName="AppointmentRecord">-->
+<!--        </table>-->
+<!--        <table tableName="computer" domainObjectName="Computer">-->
+<!--        </table>-->
+<!--        <table tableName="computer_room" domainObjectName="ComputerRoom">-->
+<!--        </table>-->
+<!--        <table tableName="st_user" domainObjectName="StUser">-->
+<!--        </table>-->
+<!--        <table tableName="usage_record" domainObjectName="UsageRecord">-->
+<!--        </table>-->
+    </context>
+</generatorConfiguration>

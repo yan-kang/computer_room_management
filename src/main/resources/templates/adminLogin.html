@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员登录</title>
+</head>
+<body>
+<span th:text="${msg}"></span>
+<form action="/alogin" method="post">
+    用户名: <input type="text" name="aname" />
+    密码：<input type="text" name="apsswd" />
+    <input type="submit" value="登录" />
+</form>
+<a href="/">用户登录</a>
+</body>
+</html>

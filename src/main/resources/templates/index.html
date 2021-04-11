@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script>
+        function myFunction()
+        {
+            alert("你好，我是一个警告框！");
+        }
+    </script>
+</head>
+<span th:text="${msg}"></span>
+<span th:text="${date}"></span><br>
+<span th:text="${fail}"></span>
+<body>
+<form action="/查询结果" method="post">
+    查询内容: <input type="text" name="cstatus" />
+    <input type="submit" value="提交" />
+</form>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>查询结果</title>
+</head>
+<body>
+共有<span th:text="${num}"></span>台电脑<span th:text="${status}"></span> ：
+<table>
+    <tr>
+        <th>cid</th>
+        <th>rid</th>
+        <th>status</th>
+    </tr>
+    <tr th:each="computer:${computerList}">
+        <td th:text="${computer.getCid()}">cid</td>
+        <td th:text="${computer.getRid()}" >rid</td>
+        <td th:text="${computer.getCstatus()}">status</td>
+        <form action="/结算" method="post">
+            <input type="hidden" th:value="${computer.getCid()}" name="cid">
+            <input type="hidden" th:value="${computer.getRid()}" name="rid">
+            <td><input type="submit" value="下机"/></td>
+        </form>
+    </tr>
+</table>
+</body>
+</html>

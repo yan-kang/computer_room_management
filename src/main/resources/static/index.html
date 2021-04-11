@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>首页</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="inner">
+
+							<!-- Logo -->
+								<a href="/" class="logo">
+									<span class="symbol"><img src="images/logo.svg" alt="" /></span>
+								</a>
+							<div class="logo">
+							<span class="title">机房列表 </span>
+							<span id="sss" class="title" th:text="${time}"></span>
+							</div>
+							<!-- Nav -->
+								<nav>
+									<ul>
+										<li><a href="#menu">Menu</a></li>
+									</ul>
+								</nav>
+
+						</div>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<h2><span th:text="${uname}"></span> </h2>
+						<h5><span th:text="${uprofile}"></span></h5><br>
+						<ul>
+							<li><a href="/">首页</a></li>
+							<li><a href="generic.html">我的订单</a></li>
+							<li><a href="generic.html">预约记录</a></li>
+							<li><a href="generic.html">个人中心</a></li>
+							<li><a href="/logOut">退出登录</a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+							<header>
+
+							</header>
+							<section class="tiles">
+<!--								<article class="style1">-->
+<!--									<span class="image">-->
+<!--										<img th:src="${path}" alt="" />-->
+<!--									</span>-->
+<!--									<a href="generic.html">-->
+<!--										<h2>Magna</h2>-->
+<!--										<div class="content">-->
+<!--											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>-->
+<!--										</div>-->
+<!--									</a>-->
+<!--								</article>-->
+									<article th:each="roomShow: ${roomShowList}" th:class="${roomShow.getStyle()}">
+										<span class="image">
+											<img th:src="${roomShow.getPath()}" alt="" />
+										</span>
+										<a href="/showroom">
+											<h2 th:text="${roomShow.getShowId()}"></h2>
+											<div class="content">
+												<input type="hidden" th:value="${roomShow.getRid()}" name="rid">
+												<p th:text="${roomShow.getDescription}">Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
+											</div>
+										</a>
+									</article>
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<ul class="copyright">
+								<li>&copy; Kang. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+<script>
+	Date.prototype.Format = function (fmt) { // 日前格式化函数
+		var o = {
+			"M+": this.getMonth() + 1, // 月份
+			"d+": this.getDate(), // 日
+			"H+": this.getHours(), // 小时
+			"m+": this.getMinutes(), // 分
+			"s+": this.getSeconds(), // 秒
+			"q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+			"S": this.getMilliseconds(), // 毫秒
+			"E":this.getDay()//星期
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		for (var k in o)
+			if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		return fmt;
+	}
+	function refresh(){
+		//js获取时间
+		var myDate=new Date().Format("MM月dd日 HH:mm:ss");
+		$("#sss").html(myDate);
+	//从后端获取时间
+	// $.ajax({
+	// 	url: "/refreshDate",
+	// 	type: 'post',
+	// 	//contentType: 'application/json', //没规定就是默认的application/x-www-form-urlencoded; charset=UTF-8
+	// 	//格式的问题真的是头大，如果大家出现前端明显送出了数据但是后端取出为null 的时候，
+	// 	//肯定是格式问题了，建议都用默认格式好了
+	//
+	// 	data:modeljson,  //要发的数据，如果出现格式问题则 JSON.stringify(modeljson)
+	// 	async: true,
+	// 	success: function(data){
+	// 		if(data != null){
+	// 			var a = JSON.parse(data) //必要的
+	// 			$("#sss").html(a.date);
+	// 		}
+	// 	}
+	// });
+}
+var interval_online = setInterval(refresh,1000);//1秒刷新一次时间
+</script>
+
+	</body>
+</html>

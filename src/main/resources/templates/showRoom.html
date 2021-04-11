@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>查询结果</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>status</th>
+    </tr>
+    <tr th:each="computerRoom:${computerRoomList}">
+        <td th:text="${computerRoom.getRid()}">id</td>
+        <td th:text="${computerRoom.getRstatus()}">status</td>
+    </tr>
+</table>
+</body>
+</html>
