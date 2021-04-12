@@ -1,5 +1,6 @@
 package com.kang.computer_room_management;
 
+import com.kang.computer_room_management.common.Utils;
 import com.kang.computer_room_management.common.domain.Computer;
 import com.kang.computer_room_management.common.domain.ComputerRoom;
 import com.kang.computer_room_management.common.domain.TableTest;
@@ -8,6 +9,7 @@ import com.kang.computer_room_management.mapper.ComputerMapper;
 import com.kang.computer_room_management.mapper.ComputerRoomMapper;
 import com.kang.computer_room_management.mapper.TableTestMapper;
 import com.kang.computer_room_management.service.IComputerRoomService;
+import com.kang.computer_room_management.service.IComputerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +27,9 @@ class ComputerRoomManagementApplicationTests {
     ComputerMapper computerMapper;
     @Autowired
     IComputerRoomService computerRoomService;
+    Utils utils=new Utils();
+    @Autowired
+    IComputerService computerService;
     @Test
     void contextLoads() {
 //        TableTest tableTest;
@@ -72,5 +77,9 @@ class ComputerRoomManagementApplicationTests {
 //            System.out.println(computer.getCid()+" "+computer.getCstatus());
 //            computerMapper.updateByPrimaryKeySelective(computer);
 //        }
+
+        //更新所有机房和机位状态
+        computerRoomService.updateRoomStatus();
+        computerService.updateComputerStatus();
     }
 }

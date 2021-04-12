@@ -16,19 +16,12 @@ public class AppointmentController {
         this.computerService = computerService;
     }
 
-    @RequestMapping("/预约结果")
-    public String appoint(Model model, Computer computer){
-        computerService.setComputerStatusDown(computer);
-        model.addAttribute(computer);
-        model.addAttribute("num",computer.getCid()%30>0?computer.getCid()%30:30);
-        return "appointResult";
-    }
 
-    @RequestMapping("/结算")
-    public String unAppoint(Model model,Computer computer){
-        computerService.setComputerStatusUp(computer);
-        model.addAttribute(computer);
-        model.addAttribute("num",computer.getCid()%30>0?computer.getCid()%30:30);
-        return "unAppointResult";
-    }
+//    @RequestMapping("/结算")
+//    public String unAppoint(Model model,Computer computer){
+//        computerService.setComputerStatusUp(computer);
+//        model.addAttribute(computer);
+//        model.addAttribute("num",computer.getCid()%30>0?computer.getCid()%30:30);
+//        return "unAppointResult";
+//    }
 }

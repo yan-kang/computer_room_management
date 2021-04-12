@@ -8,10 +8,11 @@ import java.util.List;
 
 public interface IComputerService {
     List<Computer> findComputers(Computer computer);
-    void setComputerStatusUp(Computer computer);
-    void setComputerStatusDown(Computer computer);
+    void setComputerStatusUp(int cid);
+    void setComputerStatusDown(int cid);
     int freeComputerInRoom(int roomId);
-    String queryComputersIn(Integer rid, HttpServletRequest httpServletRequest);
     String showComputers(HttpServletRequest httpServletRequest);
-    String showComputersPage(Model model);
+    String showComputersPage(Model model,HttpServletRequest httpServletRequest);
+    String chooseComputers(int cid,HttpServletRequest httpServletRequest);
+    void updateComputerStatus();
 }

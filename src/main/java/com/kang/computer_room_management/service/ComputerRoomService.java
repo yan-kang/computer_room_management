@@ -1,15 +1,17 @@
 package com.kang.computer_room_management.service;
 
-import com.kang.computer_room_management.common.domain.Computer;
-import com.kang.computer_room_management.common.domain.ComputerExample;
-import com.kang.computer_room_management.common.domain.ComputerRoom;
-import com.kang.computer_room_management.common.domain.ComputerRoomExample;
+import com.kang.computer_room_management.common.Utils;
+import com.kang.computer_room_management.common.domain.*;
+import com.kang.computer_room_management.mapper.AppointmentRecordMapper;
 import com.kang.computer_room_management.mapper.ComputerMapper;
 import com.kang.computer_room_management.mapper.ComputerRoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -17,17 +19,18 @@ public class ComputerRoomService implements IComputerRoomService {
     final private ComputerRoomMapper computerRoomMapper;
     final private ComputerMapper computerMapper;
     final private IAppointmentRecordService appointmentRecordService;
+    final private AppointmentRecordMapper appointmentRecordMapper;
     @Autowired
-    public ComputerRoomService(ComputerRoomMapper computerRoomMapper, ComputerMapper computerMapper, IAppointmentRecordService appointmentRecordService) {
+    public ComputerRoomService(ComputerRoomMapper computerRoomMapper, ComputerMapper computerMapper, IAppointmentRecordService appointmentRecordService, AppointmentRecordMapper appointmentRecordMapper) {
         this.computerRoomMapper = computerRoomMapper;
         this.computerMapper = computerMapper;
         this.appointmentRecordService = appointmentRecordService;
+        this.appointmentRecordMapper = appointmentRecordMapper;
     }
-
-
+    Utils utils=new Utils();
     @Override
     public List<ComputerRoom> findRoomsAs(ComputerRoom computerRoom) {
-        updateRoomStatus();
+        //updateRoomStatus();
         ComputerRoomExample computerRoomExample=new ComputerRoomExample();
         computerRoomExample.createCriteria().andRstatusEqualTo(computerRoom.getRstatus());
         List<ComputerRoom> computerRooms=computerRoomMapper.selectByExample(computerRoomExample);
@@ -62,12 +65,14 @@ public class ComputerRoomService implements IComputerRoomService {
         }
         //找到正在预约中的机房，更新status为1
         List<Integer> ridInA=appointmentRecordService.findRidInAppointment();
-        ComputerRoomExample computerRoomExample2=new ComputerRoomExample();
-        computerRoomExample2.createCriteria().andRidIn(ridInA);
-        List<ComputerRoom> computerRooms2=computerRoomMapper.selectByExample(computerRoomExample2);
-        for(ComputerRoom computerRoom1:computerRooms2){
-            computerRoom1.setRstatus(1);
-            computerRoomMapper.updateByPrimaryKeySelective(computerRoom1);
+        if(ridInA!=null){
+            ComputerRoomExample computerRoomExample2=new ComputerRoomExample();
+            computerRoomExample2.createCriteria().andRidIn(ridInA);
+            List<ComputerRoom> computerRooms2=computerRoomMapper.selectByExample(computerRoomExample2);
+            for(ComputerRoom computerRoom1:computerRooms2){
+                computerRoom1.setRstatus(1);
+                computerRoomMapper.updateByPrimaryKeySelective(computerRoom1);
+            }
         }
     }
 
@@ -75,6 +80,38 @@ public class ComputerRoomService implements IComputerRoomService {
     public void showRooms() {
         //展示机房信息
 
+    }
+
+    @Override
+    public String chooseRoom(HttpServletRequest httpServletRequest) {
+        int code = 0;
+        if(utils.isUserLogin(httpServletRequest)) {
+            System.out.println(httpServletRequest.getParameter("reason"));
+            HttpSession httpSession = httpServletRequest.getSession();
+            AppointmentRecord appointmentRecord=new AppointmentRecord();
+            appointmentRecord.setUid((int)httpSession.getAttribute("uid"));
+            appointmentRecord.setRid((int)httpSession.getAttribute("nowRoom"));
+            Date date=new Date();
+            appointmentRecord.setReqdate(date);
+            appointmentRecord.setArtype(0);
+            appointmentRecord.setArstatus(3);
+            appointmentRecordMapper.insert(appointmentRecord);
+            updateRoomStatus();
+            code=1;
+            return "{\"code\":" + code + ",\"uname\":\"" + httpSession.getAttribute("uname") + "\"}";
+        }else{
+            return "{\"code\":"+code+"}";
+        }
+    }
+    @Override
+    public String queryRoomStatusBy(Integer rid, HttpServletRequest httpServletRequest) {
+        int loginStaus=0;
+        if(utils.isUserLogin(httpServletRequest))loginStaus=1;
+        int code=(computerRoomMapper.selectByPrimaryKey(rid)).getRstatus();
+        HttpSession httpSession=httpServletRequest.getSession();
+        httpSession.setAttribute("nowRoom",rid);
+        String showId=(utils.returnValueBy(rid,3))+"0" + (rid%3>0?rid%3:3);
+        return "{\"code\":"+code+",\"showId\":\""+showId+"\",\"loginStatus\":"+loginStaus+"}";
     }
 
 }

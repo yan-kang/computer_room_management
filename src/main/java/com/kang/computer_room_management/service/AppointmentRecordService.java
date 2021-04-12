@@ -21,8 +21,12 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     public List<Integer> findRidInAppointment() {
         //查找在预约表且状态为0的机房id
         List<Integer> ridInA=new ArrayList<>();
+        List<Integer> artstatus=new ArrayList<>();
+        artstatus.add(3);
+        artstatus.add(4);
+        artstatus.add(6);
         AppointmentRecordExample appointmentRecordExample=new AppointmentRecordExample();
-        appointmentRecordExample.createCriteria().andArstatusEqualTo(0);
+        appointmentRecordExample.createCriteria().andArstatusIn(artstatus);
         List<AppointmentRecord> appointmentRecords=appointmentRecordMapper.selectByExample(appointmentRecordExample);
         for(AppointmentRecord appointmentRecord:appointmentRecords)
             ridInA.add(appointmentRecord.getRid());

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,15 +21,14 @@ public class ComputerRoomController {
         this.computerRoomService = computerRoomService;
     }
 
-    @RequestMapping("/showroom")
-    public String showRoom(Model model, ComputerRoom computerRoom, HttpServletRequest httpServletRequest){
-        computerRoom.getRstatus();
-        System.out.println(httpServletRequest.getAttribute("id"));
-        System.out.println(httpServletRequest.getAttribute("rid"));
-        System.out.println(computerRoom.getRid());
-        List<ComputerRoom> computerRoomList=computerRoomService.findRoomsAs(computerRoom);
-        model.addAttribute(computerRoomList);
-        System.out.println("!");
-        return "showRoom";
+    @ResponseBody
+    @RequestMapping("/chooseRoom")
+    public String chooseRoom(HttpServletRequest httpServletRequest){
+        return computerRoomService.chooseRoom(httpServletRequest);
+    }
+    @ResponseBody
+    @RequestMapping("/queryComputerRooms")
+    public String queryRoomStatusBy(@RequestParam("rid") Integer rid, HttpServletRequest httpServletRequest){
+        return computerRoomService.queryRoomStatusBy(rid,httpServletRequest);
     }
 }

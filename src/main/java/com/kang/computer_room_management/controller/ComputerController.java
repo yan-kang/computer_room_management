@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class ComputerController {
@@ -23,17 +24,18 @@ public class ComputerController {
     }
 
     @ResponseBody
-    @RequestMapping("/queryComputers")
-    public String queryComputers(@RequestParam("rid") Integer rid, HttpServletRequest httpServletRequest){
-        return computerService.queryComputersIn(rid,httpServletRequest);
-    }
-    @ResponseBody
     @RequestMapping("/showComputers")
     public String showComputers(HttpServletRequest httpServletRequest){
         return computerService.showComputers(httpServletRequest);
     }
     @RequestMapping("/showComputersPage")
-    public String showComputersPage(Model model){
-        return computerService.showComputersPage(model);
+    public String showComputersPage(Model model,HttpServletRequest httpServletRequest){
+        return computerService.showComputersPage(model,httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/chooseComputers")
+    public String chooseComputers(@RequestParam("cid") int cid,HttpServletRequest httpServletRequest){
+        return computerService.chooseComputers(cid,httpServletRequest);
     }
 }

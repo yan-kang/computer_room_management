@@ -1,9 +1,17 @@
 package com.kang.computer_room_management.common;
 
+import com.kang.computer_room_management.common.domain.StUser;
+import com.kang.computer_room_management.mapper.StUserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Component
 public class Utils {
     String logPath="E:\\log\\log.txt";
     public void printLog(Exception exception){
@@ -85,5 +93,22 @@ public class Utils {
                 throw new IllegalStateException("Unexpected value: " + status);
         }
         return description;
+    }
+
+    public boolean isUserLogin(HttpServletRequest httpServletRequest){
+        HttpSession httpSession=httpServletRequest.getSession();
+        if(httpSession.getAttribute("uname")!=null&&httpSession.getAttribute("type").equals("user")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    public boolean isAdminLogin(HttpServletRequest httpServletRequest){
+        HttpSession httpSession=httpServletRequest.getSession();
+        if(httpSession.getAttribute("uname")!=null&&httpSession.getAttribute("type").equals("admin")){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

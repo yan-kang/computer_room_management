@@ -5,14 +5,17 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html xmlns:th="http://www.thymeleaf.org">
-<head >
+<head>
     <title>机房详情</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
-<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
     <script>
+        var cid=0
     function showC() {
+        cid=0;
         var jsonModel={
         }
         $.ajax({
@@ -23,14 +26,20 @@
             success:function (data) {
                 if(data!=null){
                     var d1=JSON.parse(data);
-                    console.log(d1.rid)
-                    $("#test").html(   " <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
-                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
-                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
-                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
-                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n" +
-                    "                    <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>  &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/蓝.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/> &nbsp <img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\"/>&nbsp\n"
-                )
+                    var imges="<p style=\"line-height:12\">";
+                    var id=1;
+                    d1.computerList.forEach(function (item) {
+                        if (item.status===1){
+                            imges+="<img src=\"images/绿.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\" id=\""+id+"\" onclick=\"selectedId("+id+")\"/>&nbsp&nbsp";
+                        }else {
+                            imges+="<img src=\"images/粉.png\" width=\"18%\" height=\"18%\"  alt=\"\" style=\"border-radius:20px\" id=\""+id+"\" onclick=\"selectedId("+id+")\"/>&nbsp&nbsp"
+                        }
+                        id++;
+                    })
+                    imges+="</p>"
+                    $("#test").html(imges)
+                    $("#name").html(d1.uname)
+                    $("#profile").html(d1.uprofile)
                 }
             }
         })
@@ -46,16 +55,16 @@
         <div class="inner">
 
             <!-- Logo -->
-            <a href="/" class="logo">
+            <a onclick="showCo()" class="logo">
                 <span class="symbol"><img src="images/logo.svg" alt="" /></span>
             </a>
             <div class="logo">
-                <span class="title">机房列表&nbsp&nbsp </span>
+                <span class="title">机房详情&nbsp&nbsp</span>
             </div>
             <span class="logo">
                 <span class="symbol" ><img src="images/绿.png" alt="" style="border-radius: 8px"/></span><span>空闲 </span>
                 <span class="symbol"><img src="images/粉.png" alt="" style="border-radius: 8px"/></span><span>使用中&nbsp&nbsp</span>
-                <span id="sss" class="title" th:text="${time}"></span>
+                <span id="sss" class="title" th:text="${time}"></span> &nbsp<span id="tip"><span id="tips"></span>&nbsp;<span id="ok"></span></span>
             </span>
             <!-- Nav -->
             <nav>
@@ -68,8 +77,8 @@
     </header>
     <!-- Menu -->
     <nav id="menu">
-        <h2><span th:text="${uname}"></span> </h2>
-        <h5><span th:text="${uprofile}"></span></h5><br>
+        <h2><span th:text="${uname}" id="name"></span> </h2>
+        <h5><span th:text="${uprofile}" id="profile"></span></h5><br>
         <ul>
             <li><a href="/">首页</a></li>
             <li><a href="generic.html">我的订单</a></li>
@@ -84,6 +93,7 @@
         <div class="inner">
             <header>
                 <span id="test">
+                    <img src="images/绿.png" width="18%" height="18%"  alt="" style="border-radius:20px" id="1" onclick="changeImge(1)"/> &nbsp <img src="images/绿.png" width="18%" height="18%"  alt="" style="border-radius:20px"/>  &nbsp <img src="images/蓝.png" width="18%" height="18%"  alt="" style="border-radius:20px"/> &nbsp <img src="images/蓝.png" width="18%" height="18%"  alt="" style="border-radius:20px"/> &nbsp <img src="images/粉.png" width="18%" height="18%"  alt="" style="border-radius:20px"/>&nbsp
                 </span>
             </header>
         </div>
@@ -98,12 +108,51 @@
         </div>
     </footer>
 </div>
+
+<!-- 按钮触发模态框 -->
+<!--            <button class="button primary small" data-toggle="modal" data-target="#myModal">开始演示模态框</button>-->
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title" id="myModalLabel">预约</h4>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="button primary small" onclick="chooseComputers();" data-dismiss="modal">确定</button>
+                <button type="button" class="button primary small" data-dismiss="modal" onclick="showC();clearTip()">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title" id="myModalLabel2">预约结果</h4>
+            </div>
+            <div class="modal-body" id="modal-body2"></div>
+            <div class="modal-footer">
+                <button type="button" class="button primary small" onclick="showC();clearTip()" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 <!-- Scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/browser.min.js"></script>
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script>
     Date.prototype.Format = function (fmt) { // 日期格式化函数
         var o = {
@@ -128,6 +177,44 @@
         $("#sss").html(myDate);
     }
  var nowTime=setInterval(refresh,1000);
+</script>
+<script>
+    function showModal() {
+        $("#modal-body").html("已选择"+cid+"号机，是否预约？")
+        $("#myModal").modal();
+    }
+    function chooseComputers() {
+        var jsonModel={
+            "cid":cid
+        }
+        $.ajax({
+            url: "/chooseComputers",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                    if(data!=null){
+                        var data=JSON.parse(data);
+                        console.log(data)
+                        $("#modal-body2").html("预约成功 ")
+                        $("#myModal2").modal();
+                    }
+            }
+        })
+    }
+    function selectedId(id) {
+        cid=id;
+        $("#tips").html("已选择"+id+"号机")
+        $("#ok").html("<img src=\"images/ok.jpg\" style='height: 10%;width: 10%;border-radius:100%' alt=\"\" onclick='" +
+            "showModal()' />")
+        var img=document.getElementById(id);
+        img.src="images/粉.png"
+    }
+    function clearTip() {
+        showC();
+        $("#tips").html("")
+        $("#ok").html("")
+    }
 </script>
 </body>
 </html>

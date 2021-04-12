@@ -10,6 +10,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -49,8 +50,8 @@
 						<h5><span th:text="${uprofile}"></span></h5><br>
 						<ul>
 							<li><a href="/">首页</a></li>
-							<li><a href="generic.html">我的订单</a></li>
-							<li><a href="generic.html">预约记录</a></li>
+							<li><a href="generic.html">我的预约</a></li>
+							<li><a href="generic.html">历史记录</a></li>
 							<li><a href="generic.html">个人中心</a></li>
 							<li><a href="/logOut">退出登录</a></li>
 						</ul>
@@ -99,13 +100,51 @@
 					</footer>
 
 			</div>
+		<!-- 模态框（Modal） -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+						<h4 class="modal-title" id="myModalLabel">已选择机房<span id="nowid"></span>&nbsp;请填写申请理由</h4>
+					</div>
+					<div class="modal-body"></div>
+					<div>
+						<textarea rows="10" cols="10" id="reason" placeholder="申请理由" autofocus="autofocus" required="required"></textarea>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="button primary small" onclick="chooseRoom();showMessage();" data-dismiss="modal">确认</button>
+						<button type="button" class="button primary small" data-dismiss="modal">取消</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
 
+		<div class="modal fade" id="result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+						<h4 class="modal-title" id="myModalLabel1">提示</h4>
+					</div>
+					<div class="modal-body" id="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="button primary small" onclick="chooseComputers();clearTip()" data-dismiss="modal">确定</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+		<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script>
 	Date.prototype.Format = function (fmt) { // 日期格式化函数
 		var o = {
@@ -154,25 +193,56 @@ var interval_online = setInterval(refresh,1000);//1秒刷新一次时间
 				"rid":rid
 			}
 			$.ajax({
-				url: "/queryComputers",
+				url: "/queryComputerRooms",
 				type: 'post',
 				data: jsonModel,
 				async: false,
 				success:function (data) {
 					if(data!=null){
 						var code=JSON.parse(data);
-						if(code.code===1){
-							console.log("机房不可预约");
-						}else if(code.code===2){
-							console.log("可预约机位");
-							window.location="/showComputersPage";
-						}
-						else{
-							console.log("机房可预约");
+						if(code.loginStatus==1) {
+							if (code.code === 1) {
+								console.log("机房不可预约");
+							} else if (code.code === 2) {
+								console.log("可预约机位");
+								window.location = "/showComputersPage";
+							} else {
+								$("#nowid").html(code.showId);
+								$("#myModal").modal();
+							}
+						}else {
+							alert("请登录后操作！")
+							window.location="/login"
 						}
 					}
 				}
 			})
+		}
+		function chooseRoom() {
+			var jsonModel={
+				"reason":document.getElementById("reason").value
+			}
+			$.ajax({
+				url: "/chooseRoom",
+				type: 'post',
+				data: jsonModel,
+				async: true,
+				success:function (data) {
+					if(data!=null){
+						var data=JSON.parse(data);
+						if(data.code===1){
+							window.location="/"
+						}else {
+							alert("请登录后操作！")
+							window.location="/login"
+						}
+					}
+				}
+			})
+		}
+		function showMessage() {
+			$("#modal-body").html("预约申请已提交")
+			$("#result").modal();
 		}
 	</script>
 
