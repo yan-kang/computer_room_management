@@ -64,4 +64,10 @@ public class UserController {
         }
         return "{\"isExist\":"+isExist+"}";
     }
+
+    @ResponseBody
+    @RequestMapping("/resetInfo")
+    public String resetInfo(HttpServletRequest httpServletRequest){
+        return userService.resetInfo(httpServletRequest);
+    }
 }

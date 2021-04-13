@@ -12,6 +12,14 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<style type="text/css">
+			.center {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+		</style>
 	</head>
 	<body class="is-preload">
 		<!-- Wrapper -->
@@ -46,13 +54,13 @@
 
 				<!-- Menu -->
 					<nav id="menu">
-						<h2><span th:text="${uname}"></span> </h2>
+						<h3><span th:text="${uname}"></span> </h3>
 						<h5><span th:text="${uprofile}"></span></h5><br>
 						<ul>
 							<li><a href="/">首页</a></li>
-							<li><a href="generic.html">我的预约</a></li>
-							<li><a href="generic.html">历史记录</a></li>
-							<li><a href="generic.html">个人中心</a></li>
+							<li><a href="/appointmentPage">我的预约</a></li>
+							<li><a href="/historyPage">历史记录</a></li>
+							<li><a href="#" onclick="resetInfo();">个人中心</a></li>
 							<li><a href="/logOut">退出登录</a></li>
 						</ul>
 					</nav>
@@ -64,22 +72,11 @@
 
 							</header>
 							<section class="tiles">
-<!--								<article class="style1">-->
-<!--									<span class="image">-->
-<!--										<img th:src="${path}" alt="" />-->
-<!--									</span>-->
-<!--									<a href="generic.html">-->
-<!--										<h2>Magna</h2>-->
-<!--										<div class="content">-->
-<!--											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>-->
-<!--										</div>-->
-<!--									</a>-->
-<!--								</article>-->
 									<article th:each="roomShow: ${roomShowList}" th:class="${roomShow.getStyle()}" th:onclick="'showComputerRooms(\''+${roomShow.getRid()}+'\')'">
 										<span class="image">
 											<img th:src="${roomShow.getPath()}" alt="" />
 										</span>
-										<a>
+										<a href="#">
 											<h2 th:text="${roomShow.getShowId()}"></h2>
 											<div class="content">
 												<p th:text="${roomShow.getDescription}" id="tt"></p>
@@ -101,8 +98,8 @@
 
 			</div>
 		<!-- 模态框（Modal） -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
+		<div class="modal fade center text-center" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="display: inline-block;width: auto">
 				<div class="modal-content">
 					<div class="modal-header">
 						<!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
@@ -110,18 +107,18 @@
 					</div>
 					<div class="modal-body"></div>
 					<div>
-						<textarea rows="10" cols="10" id="reason" placeholder="申请理由" autofocus="autofocus" required="required"></textarea>
+						<textarea id="reason" placeholder="申请理由" autofocus="autofocus" required="required"></textarea>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="button primary small" onclick="chooseRoom();showMessage();" data-dismiss="modal">确认</button>
+						<button type="button" class="button primary small" onclick="chooseRoom();" data-dismiss="modal">确认</button>
 						<button type="button" class="button primary small" data-dismiss="modal">取消</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
 		</div>
 
-		<div class="modal fade" id="result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-			<div class="modal-dialog">
+		<div class="modal fade center text-center" id="result" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+			<div class="modal-dialog" style="display: inline-block;width: auto">
 				<div class="modal-content">
 					<div class="modal-header">
 						<!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
@@ -129,11 +126,121 @@
 					</div>
 					<div class="modal-body" id="modal-body"></div>
 					<div class="modal-footer">
-						<button type="button" class="button primary small" onclick="chooseComputers();clearTip()" data-dismiss="modal">确定</button>
+						<button type="button" class="button primary small" onclick="showIndex();" data-dismiss="modal">确定</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
 		</div>
+		<div class="modal fade center text-center" id="goLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="display: inline-block;width: auto">
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+						<h4 class="modal-title" id="myModalLabel2">请登录后操作</h4>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="button primary small"  data-dismiss="modal" onclick="goLogin();">确定</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+
+		<div class="modal fade center text-center" id="resetInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="display: inline-block;width: 100%;height: 100%">
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+						<h4 class="modal-title" id="">修改个人信息</h4>
+					</div>
+					<div class="modal-body" id="info">
+						<!--							<form role="form">-->
+						<div class="form-group">
+							<span><input type="text" class="form-control" id="uprofile" placeholder="个人说明，不填写则不更新"/></span>
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control" id="psswd" placeholder="原密码，修改密码时需填写"/>
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control" id="newPsswd" placeholder="新密码，不填写则不更新"/>
+						</div>
+						<button type="button" class="button primary small"  data-dismiss="modal" onclick="submitResetInfo();">确定</button>
+						<button type="button" class="button primary small" data-dismiss="modal" onclick="clearInfo();">取消</button>
+						<!--							</form>-->
+					</div>
+<!--					<div class="modal-footer">-->
+
+<!--					</div>-->
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+		<div class="modal fade center text-center" id="resetResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="display: inline-block;width: auto">
+				<div class="modal-content">
+					<div class="modal-header">
+						<!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+						<h4 class="modal-title" id="resultMsg">个人信息已更新，下次登录时请使用新密码！</h4>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="button primary small"  data-dismiss="modal" onclick="showIndex();">确定</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+		<script>
+			function submitResetInfo() {
+				var profile=document.getElementById("uprofile").value;
+				var password=document.getElementById("psswd").value;
+				var newPassword=document.getElementById("newPsswd").value;
+				console.log(profile)
+				if(newPassword!==""&&password===""){
+					document.getElementById("psswd").setAttribute("placeholder","请填写密码");
+					document.getElementById("psswd").setAttribute("style","color:red");
+					$("#resultMsg").html("请填写密码")
+					$("#resetResult").modal()
+				}else if (newPassword!==""&&newPassword.length<6){
+					$("#resultMsg").html("密码长度必须大于6位");
+					$("#resetResult").modal()
+				}else if(profile===""&&newPassword===""){
+					$("#resultMsg").html("没有信息要更改哦");
+					$("#resetResult").modal()
+				}else{
+					var jsonModel={
+						"uprofile":profile,
+						"upsswd":password,
+						"newPsswd":newPassword
+					}
+					$.ajax({
+						url:"/resetInfo",
+						type: 'post',
+						data:jsonModel,
+						async:false,
+						success:function (data) {
+							if(data!=null){
+								var data=JSON.parse(data);
+								if (data.code===1){
+									$("#resultMsg").html("个人信息已更新！");
+									$("#resetResult").modal()
+								}else if (data.code==-1){
+									$("#resultMsg").html("登录信息已过期，请登录！");
+									$("#resetResult").modal()
+								} else{
+									$("#resultMsg").html("密码错误，请重试！");
+									$("#resetResult").modal()
+								}
+							}
+						}
+					})
+				}
+			}
+			function clearInfo() {
+				document.getElementById("uprofile").value="";
+				document.getElementById("psswd").value="";
+				document.getElementById("newPsswd").value="";
+			}
+			function showIndex() {
+				window.location="/"
+			}
+		</script>
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
@@ -231,10 +338,9 @@ var interval_online = setInterval(refresh,1000);//1秒刷新一次时间
 					if(data!=null){
 						var data=JSON.parse(data);
 						if(data.code===1){
-							window.location="/"
+							showMessage();
 						}else {
-							alert("请登录后操作！")
-							window.location="/login"
+							$("#goLogin").modal();
 						}
 					}
 				}
@@ -244,6 +350,13 @@ var interval_online = setInterval(refresh,1000);//1秒刷新一次时间
 			$("#modal-body").html("预约申请已提交")
 			$("#result").modal();
 		}
+		function goLogin() {
+			window.location="/login"
+		}
+		function resetInfo() {
+			$("#resetInfo").modal()
+		}
+
 	</script>
 
 	</body>

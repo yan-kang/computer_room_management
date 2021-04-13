@@ -1,5 +1,6 @@
 package com.kang.computer_room_management.service;
 
+import com.kang.computer_room_management.common.Utils;
 import com.kang.computer_room_management.common.domain.Admin;
 import com.kang.computer_room_management.common.domain.StUser;
 import com.kang.computer_room_management.common.domain.StUserExample;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Service
 public class UserService implements IUserService {
-
+    Utils utils=new Utils();
     final private StUserMapper stUserMapper;
     final private IAdminService adminService;
     final private ICommonService commonService;
@@ -146,6 +147,36 @@ public class UserService implements IUserService {
         else{
             return "redirect:/register";
         }
+    }
+
+    @Override
+    public String resetInfo(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession=httpServletRequest.getSession();
+        int code=0;
+        if(utils.isUserLogin(httpServletRequest)){
+            String upsswd=httpServletRequest.getParameter("upsswd");
+            StUser stUser=new StUser();
+            stUser.setUid((int)(httpSession.getAttribute("uid")));
+            if(upsswd.equals("")){
+                stUser.setUprofile(httpServletRequest.getParameter("uprofile"));
+                code=1;
+                stUserMapper.updateByPrimaryKeySelective(stUser);
+            }else {
+                if(upsswd.equals(stUserMapper.selectByPrimaryKey((int)(httpSession.getAttribute("uid"))).getUpsswd())){
+                    if(!httpServletRequest.getParameter("uprofile").equals("")){
+                        stUser.setUprofile(httpServletRequest.getParameter("uprofile"));
+                    }
+                    stUser.setUpsswd(httpServletRequest.getParameter("newPsswd"));
+                    code=1;
+                    stUserMapper.updateByPrimaryKeySelective(stUser);
+                }else {
+                    code=0;
+                }
+            }
+        }else{
+            code=-1;
+        }
+        return "{\"code\":"+code+"}";
     }
 
 }

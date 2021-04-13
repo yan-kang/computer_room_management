@@ -9,4 +9,5 @@ public interface IUserService {
     StUser login(StUser stUser);
     String loginServer(HttpServletRequest httpServletRequest, Model model);
     String register(HttpServletRequest httpServletRequest,Model model);
+    String resetInfo(HttpServletRequest httpServletRequest);
 }
