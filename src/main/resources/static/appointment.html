@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="assets/css/main.css" />
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-    <title>历史记录</title>
+    <title>我的预约</title>
     <style type="text/css">
         .center {
             position: absolute;
@@ -25,8 +25,8 @@
         <div class="inner">
 
             <!-- Logo -->
-            <a href="#" class="logo">
-                <span class="symbol"><img src="images/logo.svg" alt="" onclick="queryAppointment();"/></span>
+            <a href="/" class="logo">
+                <span class="symbol"><img src="images/首页.png" alt="" onclick="queryAppointment();"/></span>
             </a>
             <div class="logo">
                 <span class="title">我的预约&nbsp&nbsp</span>
@@ -246,7 +246,7 @@
                             var id=1;
                             var tbody="";
                             if(data.arr!==0) {
-                                console.log(data.arr)
+                                //console.log(data.arr)
                                 data.appointmentList.forEach(function (history) {
                                     var rid = history.showId;
                                     var status = history.status;
@@ -256,7 +256,7 @@
                                     var reqdate=history.reqdate;
                                     //console.log(realRid + " " + realCid)
                                     //console.log(history)
-                                    console.log(reqdate);
+                                    //console.log(reqdate);
                                     if (status === 0) {
                                         tbody += "<tr class=\"success\">\n" +
                                             "    <td>" + id + "</td>\n" +
@@ -339,7 +339,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/startUseComputer",
             type: 'post',
@@ -362,7 +361,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/cancelComputerAppoint",
             type: 'post',
@@ -385,7 +383,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/pauseUseComputer",
             type: 'post',
@@ -408,7 +405,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/endUseComputer",
             type: 'post',
@@ -420,7 +416,7 @@
                     if (data.code===0){
                         $("#myModal").modal();
                     }else{
-                        $("#msg").html("机位使用结束，请及时结算费用！");
+                        $("#msg").html("机位使用结束，本次花费￥"+data.cost+"请及时结算费用！");
                         $("#actionResult").modal();
                     }
                 }
@@ -431,7 +427,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/resetAppointInfo",
             type: 'post',
@@ -454,7 +449,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/cancelRoomAppoint",
             type: 'post',
@@ -477,7 +471,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/startUseRoom",
             type: 'post',
@@ -500,7 +493,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/showInfo",
             type: 'post',
@@ -523,7 +515,6 @@
         var jsonModel={
             "reqdate":reqdate
         }
-        console.log(reqdate);
         $.ajax({
             url: "/endUseRoom",
             type: 'post',

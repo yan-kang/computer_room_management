@@ -44,8 +44,19 @@ public class ComputerRoomService implements IComputerRoomService {
         computerExample.createCriteria().andCstatusEqualTo(0);
         List<Integer> rId=new ArrayList<Integer>();
         //找出cstatus为0的电脑所在rid集合
-        for(Computer computer:computerMapper.selectByExample(computerExample)) {
-            rId.add(computer.getRid());
+        List<Computer> computers=computerMapper.selectByExample(computerExample);
+        if(computers.size()>0) {
+            for (Computer computer :computers) {
+                rId.add(computer.getRid());
+            }
+        }else {
+            for(int i=1;i<21;i++){
+                ComputerRoom computerRoom=computerRoomMapper.selectByPrimaryKey(i);
+                if(computerRoom.getRstatus()==3){
+                    rId.add(i);
+                    break;
+                }
+            }
         }
         //找到rid在集合rId里的机房，更新status为2
         ComputerRoomExample computerRoomExample=new ComputerRoomExample();
@@ -86,17 +97,16 @@ public class ComputerRoomService implements IComputerRoomService {
     public String chooseRoom(HttpServletRequest httpServletRequest) {
         int code = 0;
         if(utils.isUserLogin(httpServletRequest)) {
-            System.out.println(httpServletRequest.getParameter("reason"));
             HttpSession httpSession = httpServletRequest.getSession();
             AppointmentRecord appointmentRecord=new AppointmentRecord();
             appointmentRecord.setUid((int)httpSession.getAttribute("uid"));
             appointmentRecord.setRid((int)httpSession.getAttribute("nowRoom"));
+            appointmentRecord.setInfo(httpServletRequest.getParameter("reason"));
             Date date=new Date();
             appointmentRecord.setReqdate(date);
             appointmentRecord.setArtype(0);
             appointmentRecord.setArstatus(3);
             appointmentRecordMapper.insert(appointmentRecord);
-            updateRoomStatus();
             code=1;
             return "{\"code\":" + code + ",\"uname\":\"" + httpSession.getAttribute("uname") + "\"}";
         }else{

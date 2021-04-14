@@ -17,6 +17,8 @@ public class AppointmentRecord {
 
     private Integer cid;
 
+    private String info;
+
     public Date getReqdate() {
         return reqdate;
     }
@@ -71,5 +73,13 @@ public class AppointmentRecord {
 
     public void setCid(Integer cid) {
         this.cid = cid;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info == null ? null : info.trim();
     }
 }

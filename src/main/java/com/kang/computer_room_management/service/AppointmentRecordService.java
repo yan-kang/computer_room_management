@@ -2,8 +2,7 @@ package com.kang.computer_room_management.service;
 
 import com.kang.computer_room_management.common.Utils;
 import com.kang.computer_room_management.common.domain.*;
-import com.kang.computer_room_management.mapper.AppointmentRecordMapper;
-import com.kang.computer_room_management.mapper.StUserMapper;
+import com.kang.computer_room_management.mapper.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,16 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     Utils utils=new Utils();
     final StUserMapper stUserMapper;
     final private AppointmentRecordMapper appointmentRecordMapper;
+    final private ComputerRoomMapper computerRoomMapper;
+    final private UsageRecordMapper usageRecordMapper;
+    final private ComputerMapper computerMapper;
     @Autowired
-    public AppointmentRecordService(StUserMapper stUserMapper, AppointmentRecordMapper appointmentRecordMapper) {
+    public AppointmentRecordService(StUserMapper stUserMapper, AppointmentRecordMapper appointmentRecordMapper, ComputerRoomMapper computerRoomMapper, UsageRecordMapper usageRecordMapper, ComputerMapper computerMapper) {
         this.stUserMapper = stUserMapper;
         this.appointmentRecordMapper = appointmentRecordMapper;
+        this.computerRoomMapper = computerRoomMapper;
+        this.usageRecordMapper = usageRecordMapper;
+        this.computerMapper = computerMapper;
     }
 
     @Override
@@ -75,6 +80,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
             uprofile=stUser.getUprofile();
             AppointmentRecordExample appointmentRecordExample=new AppointmentRecordExample();
             appointmentRecordExample.createCriteria().andUidEqualTo(uid);
+            appointmentRecordExample.setOrderByClause("reqdate desc");
             List<AppointmentRecord> appointmentRecords=appointmentRecordMapper.selectByExample(appointmentRecordExample);
             if(appointmentRecords.size()>0){
                 int i=1;
@@ -82,7 +88,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                      ) {
                     JSONObject jsonObject=new JSONObject();
                     jsonObject.put("showId",utils.ridToShowId(appointmentrecord.getRid()));
-                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
                     String status=utils.statusToString(appointmentrecord.getArstatus());
                     jsonObject.put("date",simpleDateFormat.format(appointmentrecord.getReqdate()));
                     jsonObject.put("status",status);
@@ -102,8 +108,8 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     @Override
     public String showAppointment(HttpServletRequest httpServletRequest) {
         HttpSession httpSession=httpServletRequest.getSession();
-        int code=0;
-        int arr=0;
+        int code;
+        int arr;
         String uname="未登录";
         String uprofile="未登录";
         JSONArray jsonArray=new JSONArray();
@@ -149,6 +155,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
 
     @Override
     public String startUseComputer(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession=httpServletRequest.getSession();
         int code=0;
         if(utils.isUserLogin(httpServletRequest)){
             code=1;
@@ -157,6 +164,14 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
                 appointmentRecord.setArstatus(1);
+                UsageRecord usageRecord=new UsageRecord();
+                usageRecord.setStartTime(new Date());
+                usageRecord.setCid(appointmentRecord.getCid());
+                usageRecord.setUid((int)httpSession.getAttribute("uid"));
+                usageRecord.setStatus(0);
+                usageRecord.setRid(appointmentRecord.getRid());
+                usageRecord.setReqdate(date);
+                usageRecordMapper.insert(usageRecord);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -178,7 +193,10 @@ public class AppointmentRecordService implements IAppointmentRecordService {
             try {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
-                appointmentRecord.setArstatus(9);
+                appointmentRecord.setArstatus(8);
+                Computer computer=computerMapper.selectByPrimaryKey(appointmentRecord.getCid());
+                computer.setCstatus(1);
+                computerMapper.updateByPrimaryKeySelective(computer);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -200,7 +218,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
             try {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
-                appointmentRecord.setArstatus(-1);
+                appointmentRecord.setArstatus(1);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -216,6 +234,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     @Override
     public String endUseComputer(HttpServletRequest httpServletRequest) {
         int code;
+        String costStr="";
         if(utils.isUserLogin(httpServletRequest)){
             code=1;
             DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
@@ -223,6 +242,15 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
                 appointmentRecord.setArstatus(2);
+                Computer computer=computerMapper.selectByPrimaryKey(appointmentRecord.getCid());
+                computer.setCstatus(1);
+                computerMapper.updateByPrimaryKeySelective(computer);
+                UsageRecordExample usageRecordExample=new UsageRecordExample();
+                usageRecordExample.createCriteria().andReqdateEqualTo(date);
+                List<UsageRecord> usageRecords=usageRecordMapper.selectByExample(usageRecordExample);
+                if(usageRecords.size()>0){
+                    costStr = getString(usageRecords, 5);
+                }
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -232,7 +260,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
         else {
             code=0;
         }
-        return "{\"code\":"+code+"}";
+        return "{\"code\":"+code+",\"cost\":\""+costStr+"\"}";
     }
 
     @Override
@@ -243,9 +271,6 @@ public class AppointmentRecordService implements IAppointmentRecordService {
             DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
             try {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
-                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
-                appointmentRecord.setArstatus(11);
-                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
                 code=-1;
@@ -267,6 +292,10 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
                 appointmentRecord.setArstatus(8);
+                ComputerRoom computerRoom=new ComputerRoom();
+                computerRoom.setRid(appointmentRecord.getRid());
+                computerRoom.setRstatus(3);
+                computerRoomMapper.updateByPrimaryKeySelective(computerRoom);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -281,6 +310,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
 
     @Override
     public String startUseRoom(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession=httpServletRequest.getSession();
         int code;
         if(utils.isUserLogin(httpServletRequest)){
             code=1;
@@ -290,6 +320,13 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
                 appointmentRecord.setArstatus(6);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+                UsageRecord usageRecord=new UsageRecord();
+                usageRecord.setStartTime(new Date());
+                usageRecord.setUid((int)httpSession.getAttribute("uid"));
+                usageRecord.setStatus(0);
+                usageRecord.setRid(appointmentRecord.getRid());
+                usageRecord.setReqdate(date);
+                usageRecordMapper.insert(usageRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
                 code=-1;
@@ -310,7 +347,6 @@ public class AppointmentRecordService implements IAppointmentRecordService {
             try {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
-                appointmentRecord.setArstatus(10);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -326,6 +362,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     @Override
     public String endUseRoom(HttpServletRequest httpServletRequest) {
         int code;
+        String costStr="";
         if(utils.isUserLogin(httpServletRequest)){
             code=1;
             DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
@@ -333,7 +370,17 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
                 appointmentRecord.setArstatus(7);
+                ComputerRoom computerRoom=new ComputerRoom();
+                computerRoom.setRid(appointmentRecord.getRid());
+                computerRoom.setRstatus(3);
+                computerRoomMapper.updateByPrimaryKeySelective(computerRoom);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+                UsageRecordExample usageRecordExample=new UsageRecordExample();
+                usageRecordExample.createCriteria().andReqdateEqualTo(date);
+                List<UsageRecord> usageRecords=usageRecordMapper.selectByExample(usageRecordExample);
+                if(usageRecords.size()>0){
+                    costStr = getString(usageRecords, 100);
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
                 code=-1;
@@ -342,6 +389,19 @@ public class AppointmentRecordService implements IAppointmentRecordService {
         else {
             code=0;
         }
-        return "{\"code\":"+code+"}";
+        return "{\"code\":"+code+",\"cost\":\""+costStr+"\"}";
+    }
+
+    private String getString(List<UsageRecord> usageRecords, int i) {
+        UsageRecord u =usageRecords.get(0);
+        u.setStatus(2);
+        u.setEndTime(new Date());
+        double time=(double)((new Date()).getTime()-u.getStartTime().getTime())/(1000 * 60 * 60);
+        time=(double)Math.round(time * 100) / 100;
+        double cost=(double)Math.round(time* i *100)/100;
+        String costStr = "" + cost;
+        u.setCost(cost);
+        usageRecordMapper.updateByPrimaryKey(u);
+        return costStr;
     }
 }

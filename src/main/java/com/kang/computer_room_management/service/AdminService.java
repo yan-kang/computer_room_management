@@ -56,7 +56,7 @@ public class AdminService implements IAdminService {
 
 
     static void showIndex(Model model, Utils utils, IComputerRoomService computerRoomService, ComputerRoomMapper computerRoomMapper, IComputerService computerService) {
-        //computerRoomService.updateRoomStatus();
+        computerRoomService.updateRoomStatus();
         computerRoomService.showRooms();
         List<RoomShow> roomShowList=new ArrayList<>();
         for(int i=1;i<21;i++){

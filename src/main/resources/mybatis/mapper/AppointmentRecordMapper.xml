@@ -9,6 +9,7 @@
     <result column="dealdate" property="dealdate" jdbcType="TIMESTAMP" />
     <result column="artype" property="artype" jdbcType="INTEGER" />
     <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="info" property="info" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    reqdate, uid, rid, arstatus, dealdate, artype, cid
+    reqdate, uid, rid, arstatus, dealdate, artype, cid, info
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecordExample" >
     select
@@ -104,10 +105,10 @@
   <insert id="insert" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecord" >
     insert into appointment_record (reqdate, uid, rid, 
       arstatus, dealdate, artype, 
-      cid)
+      cid, info)
     values (#{reqdate,jdbcType=TIMESTAMP}, #{uid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, 
       #{arstatus,jdbcType=INTEGER}, #{dealdate,jdbcType=TIMESTAMP}, #{artype,jdbcType=INTEGER}, 
-      #{cid,jdbcType=INTEGER})
+      #{cid,jdbcType=INTEGER}, #{info,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.kang.computer_room_management.common.domain.AppointmentRecord" >
     insert into appointment_record
@@ -133,6 +134,9 @@
       <if test="cid != null" >
         cid,
       </if>
+      <if test="info != null" >
+        info,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="reqdate != null" >
@@ -155,6 +159,9 @@
       </if>
       <if test="cid != null" >
         #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="info != null" >
+        #{info,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -188,6 +195,9 @@
       <if test="record.cid != null" >
         cid = #{record.cid,jdbcType=INTEGER},
       </if>
+      <if test="record.info != null" >
+        info = #{record.info,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -201,7 +211,8 @@
       arstatus = #{record.arstatus,jdbcType=INTEGER},
       dealdate = #{record.dealdate,jdbcType=TIMESTAMP},
       artype = #{record.artype,jdbcType=INTEGER},
-      cid = #{record.cid,jdbcType=INTEGER}
+      cid = #{record.cid,jdbcType=INTEGER},
+      info = #{record.info,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -227,6 +238,9 @@
       <if test="cid != null" >
         cid = #{cid,jdbcType=INTEGER},
       </if>
+      <if test="info != null" >
+        info = #{info,jdbcType=VARCHAR},
+      </if>
     </set>
     where reqdate = #{reqdate,jdbcType=TIMESTAMP}
   </update>
@@ -237,7 +251,8 @@
       arstatus = #{arstatus,jdbcType=INTEGER},
       dealdate = #{dealdate,jdbcType=TIMESTAMP},
       artype = #{artype,jdbcType=INTEGER},
-      cid = #{cid,jdbcType=INTEGER}
+      cid = #{cid,jdbcType=INTEGER},
+      info = #{info,jdbcType=VARCHAR}
     where reqdate = #{reqdate,jdbcType=TIMESTAMP}
   </update>
 </mapper>

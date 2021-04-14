@@ -79,7 +79,8 @@ class ComputerRoomManagementApplicationTests {
 //        }
 
         //更新所有机房和机位状态
-        computerRoomService.updateRoomStatus();
-        computerService.updateComputerStatus();
+//        computerRoomService.updateRoomStatus();
+//        computerService.updateComputerStatus();
+
     }
 }

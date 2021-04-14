@@ -125,6 +125,7 @@ public class Utils {
                 status="正在上机";
                 break;
             case 2:
+            case 7:
                 status="使用结束";
                 break;
             case 3:
@@ -139,8 +140,8 @@ public class Utils {
             case 6:
                 status="机房使用中";
                 break;
-            case 7:
-                status="取消预约";
+            case 8:
+                status="预约取消";
                 break;
             default:break;
         }
@@ -171,4 +172,5 @@ public class Utils {
         integers.add(6);
         return integers;
     }
+
 }
