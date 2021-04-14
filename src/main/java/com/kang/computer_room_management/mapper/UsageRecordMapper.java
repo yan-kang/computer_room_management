@@ -3,19 +3,14 @@ package com.kang.computer_room_management.mapper;
 import com.kang.computer_room_management.common.domain.UsageRecord;
 import com.kang.computer_room_management.common.domain.UsageRecordExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
-@Mapper
 public interface UsageRecordMapper {
     int countByExample(UsageRecordExample example);
 
     int deleteByExample(UsageRecordExample example);
 
-    int deleteByPrimaryKey(Integer uid);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(UsageRecord record);
 
@@ -23,7 +18,7 @@ public interface UsageRecordMapper {
 
     List<UsageRecord> selectByExample(UsageRecordExample example);
 
-    UsageRecord selectByPrimaryKey(Integer uid);
+    UsageRecord selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") UsageRecord record, @Param("example") UsageRecordExample example);
 

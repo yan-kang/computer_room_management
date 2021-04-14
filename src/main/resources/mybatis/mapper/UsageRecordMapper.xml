@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kang.computer_room_management.mapper.UsageRecordMapper" >
   <resultMap id="BaseResultMap" type="com.kang.computer_room_management.common.domain.UsageRecord" >
-    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="cid" property="cid" jdbcType="INTEGER" />
     <result column="rid" property="rid" jdbcType="INTEGER" />
     <result column="start_time" property="startTime" jdbcType="DATE" />
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    uid, cid, rid, start_time, end_time, status, cost
+    id, uid, cid, rid, start_time, end_time, status, cost
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.kang.computer_room_management.common.domain.UsageRecordExample" >
     select
@@ -89,11 +90,11 @@
     select 
     <include refid="Base_Column_List" />
     from usage_record
-    where uid = #{uid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from usage_record
-    where uid = #{uid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.kang.computer_room_management.common.domain.UsageRecordExample" >
     delete from usage_record
@@ -102,16 +103,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.kang.computer_room_management.common.domain.UsageRecord" >
-    insert into usage_record (uid, cid, rid, 
-      start_time, end_time, status, 
-      cost)
-    values (#{uid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER}, 
-      #{startTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, #{status,jdbcType=INTEGER}, 
-      #{cost,jdbcType=DOUBLE})
+    insert into usage_record (id, uid, cid, 
+      rid, start_time, end_time, 
+      status, cost)
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, 
+      #{rid,jdbcType=INTEGER}, #{startTime,jdbcType=DATE}, #{endTime,jdbcType=DATE}, 
+      #{status,jdbcType=INTEGER}, #{cost,jdbcType=DOUBLE})
   </insert>
   <insert id="insertSelective" parameterType="com.kang.computer_room_management.common.domain.UsageRecord" >
     insert into usage_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
       <if test="uid != null" >
         uid,
       </if>
@@ -135,6 +139,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
       <if test="uid != null" >
         #{uid,jdbcType=INTEGER},
       </if>
@@ -167,6 +174,9 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update usage_record
     <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
       <if test="record.uid != null" >
         uid = #{record.uid,jdbcType=INTEGER},
       </if>
@@ -195,7 +205,8 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update usage_record
-    set uid = #{record.uid,jdbcType=INTEGER},
+    set id = #{record.id,jdbcType=INTEGER},
+      uid = #{record.uid,jdbcType=INTEGER},
       cid = #{record.cid,jdbcType=INTEGER},
       rid = #{record.rid,jdbcType=INTEGER},
       start_time = #{record.startTime,jdbcType=DATE},
@@ -209,6 +220,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.kang.computer_room_management.common.domain.UsageRecord" >
     update usage_record
     <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
       <if test="cid != null" >
         cid = #{cid,jdbcType=INTEGER},
       </if>
@@ -228,16 +242,17 @@
         cost = #{cost,jdbcType=DOUBLE},
       </if>
     </set>
-    where uid = #{uid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.kang.computer_room_management.common.domain.UsageRecord" >
     update usage_record
-    set cid = #{cid,jdbcType=INTEGER},
+    set uid = #{uid,jdbcType=INTEGER},
+      cid = #{cid,jdbcType=INTEGER},
       rid = #{rid,jdbcType=INTEGER},
       start_time = #{startTime,jdbcType=DATE},
       end_time = #{endTime,jdbcType=DATE},
       status = #{status,jdbcType=INTEGER},
       cost = #{cost,jdbcType=DOUBLE}
-    where uid = #{uid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

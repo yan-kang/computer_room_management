@@ -3,6 +3,8 @@ package com.kang.computer_room_management.common.domain;
 import java.util.Date;
 
 public class UsageRecord {
+    private Integer id;
+
     private Integer uid;
 
     private Integer cid;
@@ -16,6 +18,14 @@ public class UsageRecord {
     private Integer status;
 
     private Double cost;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getUid() {
         return uid;
