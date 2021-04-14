@@ -47,4 +47,59 @@ public class AppointmentController {
     public String showAppointment(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showAppointment(httpServletRequest);
     }
+
+    @ResponseBody
+    @RequestMapping("/startUseComputer")
+    public String startUseComputer(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.startUseComputer(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/cancelComputerAppoint")
+    public String cancelComputerAppoint(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.cancelComputerAppoint(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/pauseUseComputer")
+    public String pauseUseComputer(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.pauseUseComputer(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/endUseComputer")
+    public String endUseComputer(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.endUseComputer(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/resetAppointInfo")
+    public String resetAppointInfo(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.resetAppointInfo(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/cancelRoomAppoint")
+    public String cancelRoomAppoint(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.cancelRoomAppoint(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/startUseRoom")
+    public String startUseRoom(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.startUseRoom(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/showInfo")
+    public String showInfo(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.showInfo(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/endUseRoom")
+    public String endUseRoom(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.endUseRoom(httpServletRequest);
+    }
+
 }

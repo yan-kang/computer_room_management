@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -124,6 +127,8 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                     }else{
                         jsonObject.put("cid","预约机房");
                     }
+                    DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+                    jsonObject.put("reqdate",dateFormat.format(a.getReqdate()));
                     jsonObject.put("status",a.getArstatus());
                     jsonObject.put("realRid",a.getRid());
                     jsonObject.put("realCid",a.getCid());
@@ -139,6 +144,204 @@ public class AppointmentRecordService implements IAppointmentRecordService {
             code=0;
             arr=0;
         }
-        return "{\"code\":"+code+",\"uname\":\""+uname+"\",\"uprofile\":\""+uprofile+"\",\"appointmentList\":"+jsonArray+"}";
+        return "{\"code\":"+code+",\"uname\":\""+uname+"\",\"uprofile\":\""+uprofile+"\",\"appointmentList\":"+jsonArray+",\"arr\":"+arr+"}";
+    }
+
+    @Override
+    public String startUseComputer(HttpServletRequest httpServletRequest) {
+        int code=0;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(1);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String cancelComputerAppoint(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(9);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String pauseUseComputer(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(-1);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String endUseComputer(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(2);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String resetAppointInfo(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(11);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String cancelRoomAppoint(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(8);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String startUseRoom(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(6);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String showInfo(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(10);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String endUseRoom(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isUserLogin(httpServletRequest)){
+            code=1;
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            try {
+                Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setArstatus(7);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                code=-1;
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
     }
 }

@@ -246,22 +246,25 @@
                             var id=1;
                             var tbody="";
                             if(data.arr!==0) {
+                                console.log(data.arr)
                                 data.appointmentList.forEach(function (history) {
                                     var rid = history.showId;
                                     var status = history.status;
                                     var cid = history.cid;
                                     var realRid = history.realRid;
                                     var realCid = history.realCid;
-                                    console.log(realRid + " " + realCid)
+                                    var reqdate=history.reqdate;
+                                    //console.log(realRid + " " + realCid)
                                     //console.log(history)
+                                    console.log(reqdate);
                                     if (status === 0) {
-                                        tbody += "<tr class=\"error\">\n" +
+                                        tbody += "<tr class=\"success\">\n" +
                                             "    <td>" + id + "</td>\n" +
                                             "    <td>" + rid + "</td>\n" +
                                             "    <td>" + cid + "</td>\n" +
                                             "    <td> 机位预约成功 </td>\n" +
-                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"goLogin();\">确定</button>\n" +
-                                            "    <button type=\"button\" class=\"button small\" onclick=\"goLogin();\">确定</button></td>\n" +
+                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"startUseComputer("+reqdate+");\">开始上机</button>\n" +
+                                            "    <button type=\"button\" class=\"button small\" onclick=\"cancelComputerAppoint("+reqdate+");\">取消预约</button></td>\n" +
                                             "</tr>";
                                     } else if (status === 1) {
                                         tbody += "<tr class=\"error\">\n" +
@@ -269,26 +272,26 @@
                                             "    <td>" + rid + "</td>\n" +
                                             "    <td>" + cid + "</td>\n" +
                                             "    <td> 机位使用中</td>\n" +
-                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"goLogin();\">确定</button>\n" +
-                                            "    <button type=\"button\" class=\"button small\" onclick=\"goLogin();\">确定</button></td>\n" +
+                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"pauseUseComputer("+reqdate+");\">暂停休息</button>\n" +
+                                            "    <button type=\"button\" class=\"button small\" onclick=\"endUseComputer("+reqdate+");\">结束上机</button></td>\n" +
                                             "</tr>";
                                     } else if (status === 3) {
-                                        tbody += "<tr class=\"error\">\n" +
+                                        tbody += "<tr class=\"warning\">\n" +
                                             "    <td>" + id + "</td>\n" +
                                             "    <td>" + rid + "</td>\n" +
                                             "    <td>" + cid + "</td>\n" +
                                             "    <td>机房预约中</td>\n" +
-                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"goLogin();\">确定</button>\n" +
-                                            "    <button type=\"button\" class=\"button small\" onclick=\"goLogin();\">确定</button></td>\n" +
+                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"resetAppointInfo("+reqdate+");\">修改信息</button>\n" +
+                                            "    <button type=\"button\" class=\"button small\" onclick=\"cancelRoomAppoint("+reqdate+");\">取消预约</button></td>\n" +
                                             "</tr>";
                                     } else if (status === 4) {
-                                        tbody += "<tr class=\"error\">\n" +
+                                        tbody += "<tr class=\"success\">\n" +
                                             "    <td>" + id + "</td>\n" +
                                             "    <td>" + rid + "</td>\n" +
                                             "    <td>" + cid + "</td>\n" +
                                             "    <td>机房预约成功</td>\n" +
-                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"goLogin();\">确定</button>\n" +
-                                            "    <button type=\"button\" class=\"button small\" onclick=\"goLogin();\">确定</button></td>\n" +
+                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"startUseRoom("+reqdate+");\">开始使用</button>\n" +
+                                            "    <button type=\"button\" class=\"button small\" onclick=\"cancelRoomAppoint("+reqdate+");\">取消预约</button></td>\n" +
                                             "</tr>";
                                     } else {
                                         tbody += "<tr class=\"error\">\n" +
@@ -296,8 +299,8 @@
                                             "    <td>" + rid + "</td>\n" +
                                             "    <td>" + cid + "</td>\n" +
                                             "    <td>机房使用中</td>\n" +
-                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"goLogin();\">确定</button>\n" +
-                                            "    <button type=\"button\" class=\"button small\" onclick=\"goLogin();\">确定</button></td>\n" +
+                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"showInfo("+reqdate+");\">查看详情</button>\n" +
+                                            "    <button type=\"button\" class=\"button small\" onclick=\"endUseRoom("+reqdate+");\">结束使用</button></td>\n" +
                                             "</tr>";
                                     }
                                     id++;
@@ -316,6 +319,228 @@
     }
     function goLogin() {
         window.location="/login"
+    }
+</script>
+<div class="modal fade center text-center" id="actionResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="display: inline-block;width: auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title" id="msg"></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button primary small"  data-dismiss="modal" onclick="queryAppointment();">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script>
+    function startUseComputer(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/startUseComputer",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("机位开始使用，计费已开始！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function cancelComputerAppoint(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/cancelComputerAppoint",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("机位预约已取消！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function pauseUseComputer(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/pauseUseComputer",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("机位暂停使用，十分钟后将自动结算！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function endUseComputer(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/endUseComputer",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("机位使用结束，请及时结算费用！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function resetAppointInfo(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/resetAppointInfo",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("修改机房预约申请！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function cancelRoomAppoint(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/cancelRoomAppoint",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("机房预约已取消！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function startUseRoom(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/startUseRoom",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("机房开始使用，计费已开始！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function showInfo(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/showInfo",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("展示申请信息");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
+    }
+    function endUseRoom(reqdate) {
+        var jsonModel={
+            "reqdate":reqdate
+        }
+        console.log(reqdate);
+        $.ajax({
+            url: "/endUseRoom",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if (data.code===0){
+                        $("#myModal").modal();
+                    }else{
+                        $("#msg").html("使用结束，请及时结算费用！");
+                        $("#actionResult").modal();
+                    }
+                }
+            }
+        })
     }
 </script>
 </body>
