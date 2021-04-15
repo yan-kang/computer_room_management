@@ -17,11 +17,14 @@ public interface IAppointmentRecordService {
     String showAppointment(HttpServletRequest httpServletRequest);
     String startUseComputer(HttpServletRequest httpServletRequest);
     String cancelComputerAppoint(HttpServletRequest httpServletRequest);
-    String pauseUseComputer(HttpServletRequest httpServletRequest);
+    String useInfo(HttpServletRequest httpServletRequest);
     String endUseComputer(HttpServletRequest httpServletRequest);
     String resetAppointInfo(HttpServletRequest httpServletRequest);
     String cancelRoomAppoint(HttpServletRequest httpServletRequest);
     String startUseRoom(HttpServletRequest httpServletRequest);
     String showInfo(HttpServletRequest httpServletRequest);
     String endUseRoom(HttpServletRequest httpServletRequest);
+    String showAppoint(HttpServletRequest httpServletRequest);
+    String dealAppoint(HttpServletRequest httpServletRequest);
+    String showDealHistory(HttpServletRequest httpServletRequest);
 }

@@ -126,7 +126,7 @@
 					</div>
 					<div class="modal-body" id="modal-body"></div>
 					<div class="modal-footer">
-						<button type="button" class="button primary small" onclick="showIndex();" data-dismiss="modal">确定</button>
+						<button type="button" class="button primary small" onclick="goAppoint();" data-dismiss="modal">确定</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal -->
@@ -338,9 +338,14 @@ var interval_online = setInterval(refresh,1000);//1秒刷新一次时间
 					if(data!=null){
 						var data=JSON.parse(data);
 						if(data.code===1){
-							showMessage();
-						}else {
+							$("#modal-body").html("预约申请已提交")
+							$("#result").modal();
+						}else if(data.code===0) {
 							$("#goLogin").modal();
+						}
+						else {
+							$("#resultMsg").html("你有费用未结算，请先结算！");
+							$("#resetResult").modal();
 						}
 					}
 				}
@@ -356,7 +361,9 @@ var interval_online = setInterval(refresh,1000);//1秒刷新一次时间
 		function resetInfo() {
 			$("#resetInfo").modal()
 		}
-
+		function goAppoint() {
+			window.location="/appointmentPage"
+		}
 	</script>
 
 	</body>

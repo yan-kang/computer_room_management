@@ -2,10 +2,7 @@ package com.kang.computer_room_management.service;
 
 import com.kang.computer_room_management.common.Utils;
 import com.kang.computer_room_management.common.domain.*;
-import com.kang.computer_room_management.mapper.AppointmentRecordMapper;
-import com.kang.computer_room_management.mapper.ComputerMapper;
-import com.kang.computer_room_management.mapper.ComputerRoomMapper;
-import com.kang.computer_room_management.mapper.StUserMapper;
+import com.kang.computer_room_management.mapper.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +11,6 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,13 +24,15 @@ public class ComputerService implements IComputerService {
     final  private ComputerRoomMapper computerRoomMapper;
     final  private IComputerRoomService computerRoomService;
     final private AppointmentRecordMapper appointmentRecordMapper;
+    final private UsageRecordMapper usageRecordMapper;
     @Autowired
-    public ComputerService(StUserMapper stUserMapper, ComputerMapper computerMapper, ComputerRoomMapper computerRoomMapper, IComputerRoomService computerRoomService, AppointmentRecordMapper appointmentRecordMapper) {
+    public ComputerService(StUserMapper stUserMapper, ComputerMapper computerMapper, ComputerRoomMapper computerRoomMapper, IComputerRoomService computerRoomService, AppointmentRecordMapper appointmentRecordMapper, UsageRecordMapper usageRecordMapper) {
         this.stUserMapper = stUserMapper;
         this.computerMapper = computerMapper;
         this.computerRoomMapper = computerRoomMapper;
         this.computerRoomService = computerRoomService;
         this.appointmentRecordMapper = appointmentRecordMapper;
+        this.usageRecordMapper = usageRecordMapper;
     }
 
     @Override
@@ -117,16 +115,31 @@ public class ComputerService implements IComputerService {
 
     @Override
     public String chooseComputers(int cid,HttpServletRequest httpServletRequest) {
-        AppointmentRecord appointmentRecord=new AppointmentRecord();
-        appointmentRecord.setUid((int)httpServletRequest.getSession().getAttribute("uid"));
-        appointmentRecord.setRid((int)httpServletRequest.getSession().getAttribute("nowRoom"));
-        appointmentRecord.setCid(cid+((int)httpServletRequest.getSession().getAttribute("nowRoom")*30-30));
-        appointmentRecord.setArtype(1);
-        appointmentRecord.setReqdate(new Date());
-        appointmentRecord.setArstatus(0);
-        appointmentRecordMapper.insert(appointmentRecord);
-        setComputerStatusDown(cid+(int)httpServletRequest.getSession().getAttribute("nowRoom")*30-30);
-        return "{\"code\":\"1\"}";
+        int code;
+        if(utils.isUserLogin(httpServletRequest)) {
+            HttpSession httpSession = httpServletRequest.getSession();
+            int uid= (int) httpServletRequest.getSession().getAttribute("uid");
+            UsageRecordExample usageRecordExample=new UsageRecordExample();
+            usageRecordExample.createCriteria().andStatusEqualTo(2).andUidEqualTo(uid);
+            if(usageRecordMapper.selectByExample(usageRecordExample).size()>0){
+                code=-1;
+            }else {
+                code=1;
+                AppointmentRecord appointmentRecord = new AppointmentRecord();
+                appointmentRecord.setUid((int) httpServletRequest.getSession().getAttribute("uid"));
+                appointmentRecord.setRid((int) httpServletRequest.getSession().getAttribute("nowRoom"));
+                appointmentRecord.setCid(cid + ((int) httpServletRequest.getSession().getAttribute("nowRoom") * 30 - 30));
+                appointmentRecord.setArtype(1);
+                appointmentRecord.setReqdate(new Date());
+                appointmentRecord.setArstatus(0);
+                appointmentRecordMapper.insert(appointmentRecord);
+                setComputerStatusDown(cid + (int) httpServletRequest.getSession().getAttribute("nowRoom") * 30 - 30);
+            }
+        }
+        else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
     }
 
     @Override

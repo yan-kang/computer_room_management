@@ -147,7 +147,7 @@
             </div>
             <div class="modal-body" id="modal-body2"></div>
             <div class="modal-footer">
-                <button type="button" class="button primary small" onclick="showC();clearTip()" data-dismiss="modal">确定</button>
+                <button type="button" class="button primary small" onclick="goAppoint()" data-dismiss="modal">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -302,9 +302,13 @@
             success:function (data) {
                     if(data!=null){
                         var data=JSON.parse(data);
-                        console.log(data)
-                        $("#modal-body2").html("预约成功 ")
-                        $("#myModal2").modal();
+                        if(data.code===1){
+                            $("#modal-body2").html("预约成功 ")
+                            $("#myModal2").modal();
+                        }else if(data.code==-1){
+                            $("#resultMsg").html("你有费用未结算，请先结清费用！")
+                            $("#resetResult").modal();
+                        }
                     }
             }
         })
@@ -330,6 +334,9 @@
         //showC();
         $("#tips").html("")
         $("#ok").html("")
+    }
+    function goAppoint() {
+        window.location="/appointmentPage"
     }
 </script>
 </body>

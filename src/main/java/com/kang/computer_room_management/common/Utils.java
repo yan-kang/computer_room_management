@@ -173,4 +173,32 @@ public class Utils {
         return integers;
     }
 
+    //
+    public String articleClass(int rstatus,int arStatus){
+        if(rstatus==1&&arStatus==3){
+            return "style1";
+        }else if(rstatus==1&&arStatus==6){
+            return  "style2";
+        }else {
+            return "style3";
+        }
+    }
+    public String articleImg(int rstatus,int arStatus){
+        if(rstatus==1&&arStatus==3){
+            return "images/pic01.jpg";
+        }else if(rstatus==1&&arStatus==6){
+            return  "images/pic02.jpg";
+        }else {
+            return "images/pic03.jpg";
+        }
+    }
+    public String articleDescription(int rstatus,int arStatus){
+        if(rstatus==1&&arStatus==3){
+            return "待处理";
+        }else if(rstatus==1&&arStatus==6){
+            return  "已处理";
+        }else {
+            return "无需处理";
+        }
+    }
 }

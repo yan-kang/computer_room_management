@@ -38,6 +38,16 @@ public class AppointmentController {
         return appointmentRecordService.showHistory(httpServletRequest);
     }
 
+    @RequestMapping("/dealHistory")
+    public String dealHistory(){
+        return "dealHistory";
+    }
+    @ResponseBody
+    @RequestMapping("/showDealHistory")
+    public String showDealHistory(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.showDealHistory(httpServletRequest);
+    }
+
     @RequestMapping("/appointmentPage")
     public String appointmentPage(){
         return "appointment";
@@ -61,9 +71,9 @@ public class AppointmentController {
     }
 
     @ResponseBody
-    @RequestMapping("/pauseUseComputer")
-    public String pauseUseComputer(HttpServletRequest httpServletRequest){
-        return appointmentRecordService.pauseUseComputer(httpServletRequest);
+    @RequestMapping("/useInfo")
+    public String useInfo(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.useInfo(httpServletRequest);
     }
 
     @ResponseBody
@@ -102,4 +112,15 @@ public class AppointmentController {
         return appointmentRecordService.endUseRoom(httpServletRequest);
     }
 
+    @ResponseBody
+    @RequestMapping("/showAppoint")
+    public String showAppoint(HttpServletRequest httpServletRequest){
+        return appointmentRecordService.showAppoint(httpServletRequest);
+    }
+
+    @ResponseBody
+    @RequestMapping("/dealAppoint")
+    public String dealAppoint(HttpServletRequest httpServletRequest){
+        return  appointmentRecordService.dealAppoint(httpServletRequest);
+    }
 }

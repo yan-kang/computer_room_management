@@ -11,4 +11,5 @@ public interface IComputerRoomService {
     void showRooms();
     String chooseRoom(HttpServletRequest httpServletRequest);
     String queryRoomStatusBy(Integer rid, HttpServletRequest httpServletRequest);
+    String refreshInfo(HttpServletRequest httpServletRequest);
 }

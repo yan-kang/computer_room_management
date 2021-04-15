@@ -41,7 +41,8 @@ create table appointment_record
     artype   int      null comment '预约类型：
 0：预约机房需处理
 1：表示预约机位无需处理',
-    cid      int      null comment '机位id，当预约记录类型是机房则该项为null'
+    cid      int      null comment '机位id，当预约记录类型是机房则该项为null',
+    info     varchar(255) null comment '申请理由'
 );
 
 drop table computer;
@@ -69,17 +70,18 @@ create table computer_room
 drop table usage_record;
 create table usage_record
 (
-    uid int not null comment '用户id
-'
-        primary key,
+    uid int not null comment '用户id',
     cid int null comment '电脑id',
     rid int null comment '机房id',
-    start_time date null comment '开始上机时间',
-    end_time date null comment '结束上机时间',
+    start_time datetime null comment '开始上机时间',
+    end_time datetime null comment '结束上机时间',
     status int(1) null comment '状态
 0：正在使用
 1：暂停使用
 2：结束使用，待结算
 3：费用已结清',
-    cost double null comment '上机花费'
+    cost double null comment '上机花费',
+    id int auto_increment comment 'id'
+        primary key,
+    reqdate datetime null
 );

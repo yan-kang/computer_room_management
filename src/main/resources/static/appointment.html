@@ -103,6 +103,25 @@
         </div>
     </footer>
 
+    <div class="modal fade center text-center" id="resetAppointInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="display: inline-block;width: auto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                    <h4 class="modal-title" id="myModalLabel">请填写申请理由</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div>
+                    <textarea id="reason" placeholder="申请理由" autofocus="autofocus" required="required"></textarea>
+                </div>
+                <div class="modal-footer" id="submitResetAppointInfo">
+                    <button type="button" class="button primary small"  data-dismiss="modal"  onclick="submitResetAppointInfo();">确认</button>
+                    <button type="button" class="button primary small" data-dismiss="modal">取消</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
 </div>
 <div class="modal fade center text-center" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="display: inline-block;width: auto">
@@ -272,7 +291,7 @@
                                             "    <td>" + rid + "</td>\n" +
                                             "    <td>" + cid + "</td>\n" +
                                             "    <td> 机位使用中</td>\n" +
-                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"pauseUseComputer("+reqdate+");\">暂停休息</button>\n" +
+                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"useInfo("+reqdate+");\">使用情况</button>\n" +
                                             "    <button type=\"button\" class=\"button small\" onclick=\"endUseComputer("+reqdate+");\">结束上机</button></td>\n" +
                                             "</tr>";
                                     } else if (status === 3) {
@@ -321,7 +340,7 @@
         window.location="/login"
     }
 </script>
-<div class="modal fade center text-center" id="actionResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade center" id="actionResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="display: inline-block;width: auto">
         <div class="modal-content">
             <div class="modal-header">
@@ -379,12 +398,12 @@
             }
         })
     }
-    function pauseUseComputer(reqdate) {
+    function useInfo(reqdate) {
         var jsonModel={
             "reqdate":reqdate
         }
         $.ajax({
-            url: "/pauseUseComputer",
+            url: "/useInfo",
             type: 'post',
             data: jsonModel,
             async: false,
@@ -394,7 +413,7 @@
                     if (data.code===0){
                         $("#myModal").modal();
                     }else{
-                        $("#msg").html("机位暂停使用，十分钟后将自动结算！");
+                        $("#msg").html(data.info);
                         $("#actionResult").modal();
                     }
                 }
@@ -411,12 +430,13 @@
             data: jsonModel,
             async: false,
             success:function (data) {
+                console.log(data)
                 if(data!=null){
                     var data=JSON.parse(data);
                     if (data.code===0){
                         $("#myModal").modal();
                     }else{
-                        $("#msg").html("机位使用结束，本次花费￥"+data.cost+"请及时结算费用！");
+                        $("#msg").html("机位使用结束，本次花费￥"+data.cost+"，请及时结算费用！");
                         $("#actionResult").modal();
                     }
                 }
@@ -424,9 +444,16 @@
         })
     }
     function resetAppointInfo(reqdate) {
+        $("#submitResetAppointInfo").html("<button type=\"button\" class=\"button primary small\"  data-dismiss=\"modal\"  onclick=\"submitResetAppointInfo("+reqdate+");\">确认</button>\n" +
+            "                    <button type=\"button\" class=\"button primary small\" data-dismiss=\"modal\">取消</button>")
+        $("#resetAppointInfo").modal();
+    }
+    function submitResetAppointInfo(reqdate) {
         var jsonModel={
-            "reqdate":reqdate
+            "reqdate":reqdate,
+            "info":document.getElementById("reason").value
         }
+        console.log(document.getElementById("reason").value)
         $.ajax({
             url: "/resetAppointInfo",
             type: 'post',
@@ -438,7 +465,7 @@
                     if (data.code===0){
                         $("#myModal").modal();
                     }else{
-                        $("#msg").html("修改机房预约申请！");
+                        $("#msg").html("申请理由修改成功！");
                         $("#actionResult").modal();
                     }
                 }
@@ -500,11 +527,12 @@
             async: false,
             success:function (data) {
                 if(data!=null){
-                    var data=JSON.parse(data);
-                    if (data.code===0){
+                    console.log(data)
+                    var data1=JSON.parse(data);
+                    if (data1.code===0){
                         $("#myModal").modal();
                     }else{
-                        $("#msg").html("展示申请信息");
+                        $("#msg").html(data1.info);
                         $("#actionResult").modal();
                     }
                 }
@@ -521,12 +549,13 @@
             data: jsonModel,
             async: false,
             success:function (data) {
+                console.log(data)
                 if(data!=null){
                     var data=JSON.parse(data);
                     if (data.code===0){
                         $("#myModal").modal();
                     }else{
-                        $("#msg").html("使用结束，请及时结算费用！");
+                        $("#msg").html("机房使用结束，本次花费￥"+data.cost+"，请及时结算费用！");
                         $("#actionResult").modal();
                     }
                 }

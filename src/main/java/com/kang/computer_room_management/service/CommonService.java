@@ -43,7 +43,7 @@ public class CommonService implements ICommonService {
     public String index(HttpServletRequest httpServletRequest, Model model) {
         HttpSession httpSession=httpServletRequest.getSession();
         boolean isLogin;
-        if(httpSession.getAttribute("uname")==null||(httpSession.getAttribute("type")).equals("admin")){
+        if(!utils.isUserLogin(httpServletRequest)){
             isLogin=false;
         }
         else {

@@ -31,4 +31,10 @@ public class ComputerRoomController {
     public String queryRoomStatusBy(@RequestParam("rid") Integer rid, HttpServletRequest httpServletRequest){
         return computerRoomService.queryRoomStatusBy(rid,httpServletRequest);
     }
+
+    @ResponseBody
+    @RequestMapping("/refreshInfo")
+    public String refreshInfo(HttpServletRequest httpServletRequest){
+        return computerRoomService.refreshInfo(httpServletRequest);
+    }
 }

@@ -6,10 +6,11 @@
 -->
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>首页</title>
+    <title>管理首页</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
     <style type="text/css">
         .center {
@@ -19,36 +20,8 @@
             transform: translate(-50%, -50%);
         }
     </style>
-    <script  language="jscript">
-        function    correctPNG()
-        {
-            for(var    i=0;    i<document.images.length;    i++)
-            {
-                var    img    =    document.images
-                var    imgName    =    img.src.toUpperCase()
-                if    (imgName.substring(imgName.length-3,    imgName.length)    ==    "PNG")
-                {
-                    var    imgID    =    (img.id)    ?    "id='"    +    img.id    +    "'    "    :    ""
-                    var    imgClass    =    (img.className)    ?    "class='"    +    img.className    +    "'    "    :    ""
-                    var    imgTitle    =    (img.title)    ?    "title='"    +    img.title    +    "'    "    :    "title='"    +    img.alt    +    "'    "
-                    var    imgStyle    =    "display:inline-block;"    +    img.style.cssText
-                    if    (img.align    ==    "left")    imgStyle    =    "float:left;"    +    imgStyle
-                    if    (img.align    ==    "right")    imgStyle    =    "float:right;"    +    imgStyle
-                    if    (img.parentElement.href)    imgStyle    =    "cursor:hand;"    +    imgStyle
-                    var    strNewHTML    =    "<span    "    +    imgID    +    imgClass    +    imgTitle
-                        +    "    style=\""    +    "width:"    +    img.width    +    "px;    height:"    +    img.height    +    "px;"    +    imgStyle    +    ";"
-                        +    "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
-                        +    "(src=\'"    +    img.src    +    "\',    sizingMethod='scale');\"></span>"
-                    img.outerHTML    =    strNewHTML
-                    i    =    i-1
-                }
-            }
-        }
-        window.attachEvent("onload",    correctPNG);
-    </script>
-
-        </head>
-<body class="is-preload">
+</head>
+<body class="is-preload" onload="refreshInfo();">
 <!-- Wrapper -->
 <div id="wrapper">
 
@@ -58,10 +31,13 @@
 
             <!-- Logo -->
             <a href="/admin" class="logo">
-                <span class="symbol"><img src="images/logo.png" alt="" /></span>
+                <span class="symbol"><img src="images/首页.png" alt="" /></span>
             </a>
             <div class="logo">
                 <span class="title">机房列表 </span>
+                <span class="symbol" ><img src="images/绿.png" alt="" style="border-radius: 8px"/></span><span>无需处理&nbsp</span>
+                <span class="symbol"><img src="images/蓝.png" alt="" style="border-radius: 8px"/></span><span>已处理&nbsp</span>
+                <span class="symbol"><img src="images/粉.png" alt="" style="border-radius: 8px"/></span><span>待处理&nbsp</span>
                 <span id="sss" class="title" th:text="${time}"></span>
             </div>
             <!-- Nav -->
@@ -79,9 +55,9 @@
         <h2><span th:text="${uname}"></span> </h2>
         <ul>
             <li><a href="/admin">首页</a></li>
-            <li><a href="generic.html">我的信息</a></li>
-            <li><a href="generic.html">处理记录</a></li>
-            <li><a href="generic.html">个人中心</a></li>
+            <li><a href="/dealHistory">处理记录</a></li>
+            <li><a href="/feePage" >费用结算</a></li>
+            <li><a href="#" onclick="resetInfo();">修改密码</a></li>
             <li><a href="/logOut">退出登录</a></li>
         </ul>
     </nav>
@@ -91,18 +67,18 @@
         <div class="inner">
             <header>
             </header>
-            <section class="tiles">
-                <article th:each="roomShow: ${roomShowList}" th:class="${roomShow.getStyle()}">
-                    <span class="image">
-                        <img th:src="${roomShow.getPath()}" alt="" />
-                    </span>
-                    <a href="generic.html">
-                        <h2 th:text="${roomShow.getShowId()}"></h2>
-                        <div class="content">
-                            <p th:text="${roomShow.getDescription}">Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>
-                        </div>
-                    </a>
-                </article>
+            <section class="tiles" id="rooms">
+<!--                <article th:each="roomShow: ${roomShowList}" th:class="${roomShow.getStyle()}">-->
+<!--                    <span class="image">-->
+<!--                        <img th:src="${roomShow.getPath()}" alt="" />-->
+<!--                    </span>-->
+<!--                    <a href="generic.html">-->
+<!--                        <h2 th:text="${roomShow.getShowId()}"></h2>-->
+<!--                        <div class="content">-->
+<!--                            <p th:text="${roomShow.getDescription}">Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </article>-->
             </section>
         </div>
     </div>
@@ -111,7 +87,7 @@
     <footer id="footer">
         <div class="inner">
             <ul class="copyright">
-                <li>&copy; Kang. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                <li>&copy; Kang. All rights reserved</li><li>
             </ul>
         </div>
     </footer>
@@ -124,6 +100,11 @@
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script>
     Date.prototype.Format = function (fmt) { // 日前格式化函数
         var o = {
@@ -149,5 +130,236 @@
     }
     var interval_online = setInterval(refresh,1000);//1秒刷新一次当前时间
 </script>
+
+<div class="modal fade center text-center" id="resetInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="display: inline-block;width: 100%;height: 100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title" id="">修改密码</h4>
+            </div>
+            <div class="modal-body" id="info">
+                <!--							<form role="form">-->
+                <div class="form-group">
+                    <input type="password" class="form-control" id="psswd" placeholder="原密码"/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="newPsswd" placeholder="新密码"/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="reNewPsswd" placeholder="重复新密码"/>
+                </div>
+                <button type="button" class="button primary small"  data-dismiss="modal" onclick="submitResetInfo();">确定</button>
+                <button type="button" class="button primary small" data-dismiss="modal" onclick="clearInfo();">取消</button>
+                <!--							</form>-->
+            </div>
+            <!--					<div class="modal-footer">-->
+
+            <!--					</div>-->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade center text-center" id="resetResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="display: inline-block;width: auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title" id="resultMsg">个人信息已更新，下次登录时请使用新密码！</h4>
+            </div>
+            <div class="modal-footer" id="success">
+                <button type="button" class="button primary small"  data-dismiss="modal" onclick="clearInfo();refreshInfo()">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<script>
+    function resetInfo() {
+        $("#resetInfo").modal()
+    }
+    function submitResetInfo() {
+        var reNewPsswd=document.getElementById("reNewPsswd").value;
+        var password=document.getElementById("psswd").value;
+        var newPassword=document.getElementById("newPsswd").value;
+        if(newPassword!==""&&password===""){
+            document.getElementById("psswd").setAttribute("placeholder","请填写密码");
+            document.getElementById("psswd").setAttribute("style","color:red");
+            $("#resultMsg").html("请填写密码")
+            $("#resetResult").modal()
+        }else if (newPassword!==""&&newPassword.length<6){
+            $("#resultMsg").html("密码长度必须大于6位");
+            $("#resetResult").modal()
+        }else if(newPassword!==reNewPsswd){
+            $("#resultMsg").html("密码不一致");
+            $("#resetResult").modal()
+        }else if(newPassword===""){
+            $("#resultMsg").html("请填写密码");
+            $("#resetResult").modal()
+        }else{
+            var jsonModel={
+                "upsswd":password,
+                "newPsswd":newPassword
+            }
+            $.ajax({
+                url:"/resetPassword",
+                type: 'post',
+                data:jsonModel,
+                async:false,
+                success:function (data) {
+                    if(data!=null){
+                        var data=JSON.parse(data);
+                        if (data.code===1){
+                            $("#resultMsg").html("密码已修改，请重新登录！");
+                            $("#success").html("<button type=\"button\" class=\"button primary small\"  data-dismiss=\"modal\" onclick=\"logOut();\">确定</button>");
+                            $("#resetResult").modal()
+                        }else if (data.code==-1){
+                            $("#resultMsg").html("登录信息已过期，请登录！");
+                            $("#resetResult").modal()
+                        } else{
+                            $("#resultMsg").html("密码错误，请重试！");
+                            $("#resetResult").modal()
+                        }
+                    }
+                }
+            })
+        }
+    }
+    function clearInfo() {
+        document.getElementById("reNewPsswd").value="";
+        document.getElementById("psswd").value="";
+        document.getElementById("newPsswd").value="";
+    }
+    function logOut() {
+        window.location="/logOut"
+    }
+    function goLogin() {
+        window.location="/login"
+    }
+</script>
+<script>
+    function refreshInfo() {
+        //更新机房信息
+        var jsonModel={
+
+        }
+        $.ajax({
+            url: "/refreshInfo",
+            type: 'post',
+            data: jsonModel,
+            async: true,
+            success:function (data) {
+                if(data!=null) {
+                    var data = JSON.parse(data);
+                    var art = "";
+                    if (data.code !== 0) {
+                        data.roomList.forEach(function (rooms) {
+                            art += "<article class=" + rooms.class + ">\n" +
+                                "                    <span class=\"image\">\n" +
+                                "                        <img src=" + rooms.img + " alt=\"\" />\n" +
+                                "                    </span>\n" +
+                                "                    <a href=\"#\" "+rooms.onclick+">\n" +
+                                "                        <h2 >"+rooms.showId+"</h2>\n" +
+                                "                        <div class=\"content\">\n" +
+                                "                            <p >"+rooms.description+"</p>\n" +
+                                "                        </div>\n" +
+                                "                    </a>\n" +
+                                "                </article>"
+                        })
+                        $("#rooms").html(art);
+                    }
+                }else {
+                    //请登录
+                }
+            }
+        })
+    }
+    function dealRoom(rid) {
+        //处理
+        console.log(rid);
+        var jsonModel={
+            "rid":rid
+        }
+        $.ajax({
+            url: "/showAppoint",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if(data.code!==0){
+                        $("#appointInfo").modal();
+                        var info=data.info;
+                        $("#tips").html(info);
+                        var btns="<button type=\"button\" class=\"button primary small\"  data-dismiss=\"modal\" onclick=\"dealAppoint("+data.appointId+",1);\">同意</button>\n" +
+                            "                <button type=\"button\" class=\"button primary small\"  data-dismiss=\"modal\" onclick=\"dealAppoint("+data.appointId+",0);\">拒绝</button>\n" +
+                            "                <button type=\"button\" class=\"button small\"  data-dismiss=\"modal\" >取消</button>";
+                        $("#dealBtn").html(btns);
+                    }
+                    else {
+                        $("#goLogin").modal();
+                    }
+                }
+            }
+        })
+    }
+    function dealAppoint(appointId,code) {
+        var jsonModel={
+            "appointId":appointId,
+            "code":code
+        }
+        console.log(appointId)
+        $.ajax({
+            url: "/dealAppoint",
+            type: 'post',
+            data: jsonModel,
+            async: false,
+            success:function (data) {
+                if(data!=null){
+                    var data=JSON.parse(data);
+                    if(data.code===0){
+                        $("#goLogin").modal()
+                    }else if(data.code===1){
+                        $("#resultMsg").html("已同意")
+                        $("#resetResult").modal()
+                    }else {
+                        $("#resultMsg").html("已拒绝")
+                        $("#resetResult").modal()
+                    }
+                }
+            }
+        })
+    }
+</script>
+<div class="modal fade center" id="appointInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="display: inline-block;width: auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title">详细信息</h4>
+            </div>
+            <div class="modal-body" id="tips"></div>
+            <div class="modal-footer" id="dealBtn">
+                <button type="button" class="button primary small"  data-dismiss="modal" onclick="dealAppoint(appointId,1);">同意</button>
+                <button type="button" class="button primary small"  data-dismiss="modal" onclick="clearInfo(appointId,0);">拒绝</button>
+                <button type="button" class="button small"  data-dismiss="modal" >取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade center text-center" id="goLogin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="display: inline-block;width: auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                <h4 class="modal-title" id="myModalLabel2">请登录后操作</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button primary small"  data-dismiss="modal" onclick="goLogin();">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 </body>
 </html>

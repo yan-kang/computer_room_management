@@ -4,6 +4,10 @@ import com.kang.computer_room_management.common.Utils;
 import com.kang.computer_room_management.common.domain.*;
 import com.kang.computer_room_management.mapper.AdminMapper;
 import com.kang.computer_room_management.mapper.ComputerRoomMapper;
+import com.kang.computer_room_management.mapper.StUserMapper;
+import com.kang.computer_room_management.mapper.UsageRecordMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -17,16 +21,21 @@ import java.util.List;
 
 @Service
 public class AdminService implements IAdminService {
+    Utils utils=new Utils();
     final AdminMapper adminMapper;
     final IComputerService computerService;
     final IComputerRoomService computerRoomService;
     final ComputerRoomMapper computerRoomMapper;
+    final UsageRecordMapper usageRecordMapper;
+    final StUserMapper stUserMapper;
     @Autowired
-    public AdminService(AdminMapper adminMapper, IComputerService computerService, IComputerRoomService computerRoomService, ComputerRoomMapper computerRoomMapper) {
+    public AdminService(AdminMapper adminMapper, IComputerService computerService, IComputerRoomService computerRoomService, ComputerRoomMapper computerRoomMapper, UsageRecordMapper usageRecordMapper, StUserMapper stUserMapper) {
         this.adminMapper = adminMapper;
         this.computerService = computerService;
         this.computerRoomService = computerRoomService;
         this.computerRoomMapper = computerRoomMapper;
+        this.usageRecordMapper = usageRecordMapper;
+        this.stUserMapper = stUserMapper;
     }
 
     @Override
@@ -52,6 +61,80 @@ public class AdminService implements IAdminService {
             showIndex(model, utils, computerRoomService, computerRoomMapper, computerService);
         }
         return isLogin?"aindex":"redirect:/login";
+    }
+
+    @Override
+    public String resetPassword(HttpServletRequest httpServletRequest) {
+        int code;
+        HttpSession httpSession=httpServletRequest.getSession();
+        if(utils.isAdminLogin(httpServletRequest)){
+            String psswd=httpServletRequest.getParameter("upsswd");
+            String newPsswd=httpServletRequest.getParameter("newPsswd");
+            int aid=(int)httpSession.getAttribute("uid");
+            Admin admin=adminMapper.selectByPrimaryKey(aid);
+            if(admin.getApsswd().equals(psswd)){
+                admin.setApsswd(newPsswd);
+                adminMapper.updateByPrimaryKeySelective(admin);
+                code=1;
+            }else {
+                code=0;
+            }
+        }else {
+            code=-1;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String feeSettlement(HttpServletRequest httpServletRequest) {
+        int code;
+        if(utils.isAdminLogin(httpServletRequest)){
+            int id= Integer.parseInt(httpServletRequest.getParameter("id"));
+            UsageRecord usageRecord=usageRecordMapper.selectByPrimaryKey(id);
+            usageRecord.setStatus(3);
+            usageRecordMapper.updateByPrimaryKeySelective(usageRecord);
+            code=1;
+        }else {
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String queryUnfeeOrder(HttpServletRequest httpServletRequest) {
+        int code;
+        int arr = 0;
+        JSONArray jsonArray=new JSONArray();
+        String aname= (String) httpServletRequest.getSession().getAttribute("uname");
+        if(utils.isAdminLogin(httpServletRequest)){
+            code=1;
+            UsageRecordExample usageRecordExample=new UsageRecordExample();
+            usageRecordExample.createCriteria().andStatusEqualTo(2);
+            List<UsageRecord> usageRecords=usageRecordMapper.selectByExample(usageRecordExample);
+            if(usageRecords.size()>0){
+                arr=1;
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+                for (UsageRecord u:usageRecords
+                     ) {
+                    JSONObject jsonObject=new JSONObject();
+                    String time=simpleDateFormat.format(u.getStartTime());
+                    String uname=stUserMapper.selectByPrimaryKey(u.getUid()).getUname();
+                    String cost= String.valueOf(u.getCost());
+                    String rid=utils.ridToShowId(u.getRid());
+                    String id= String.valueOf(u.getId());
+                    jsonObject.put("datetime",time);
+                    jsonObject.put("uname",uname);
+                    jsonObject.put("cost",cost);
+                    jsonObject.put("rid",rid);
+                    jsonObject.put("id",id);
+                    jsonArray.put(jsonObject);
+                }
+            }
+        }else {
+            arr=0;
+            code=0;
+        }
+        return "{\"code\":"+code+",\"orderList\":"+jsonArray+",\"arr\":"+arr+",\"aname\":\""+aname+"\"}";
     }
 
 

@@ -171,6 +171,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 usageRecord.setStatus(0);
                 usageRecord.setRid(appointmentRecord.getRid());
                 usageRecord.setReqdate(date);
+                usageRecord.setCost(0.00);
                 usageRecordMapper.insert(usageRecord);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
@@ -210,16 +211,29 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     }
 
     @Override
-    public String pauseUseComputer(HttpServletRequest httpServletRequest) {
+    public String useInfo(HttpServletRequest httpServletRequest) {
         int code;
+        String info="";
         if(utils.isUserLogin(httpServletRequest)){
             code=1;
             DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
             try {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
-                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
-                appointmentRecord.setArstatus(1);
-                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+                UsageRecordExample usageRecordExample=new UsageRecordExample();
+                usageRecordExample.createCriteria().andReqdateEqualTo(date);
+                List<UsageRecord> usageRecords=usageRecordMapper.selectByExample(usageRecordExample);
+                if(usageRecords.size()>0){
+                    UsageRecord u=usageRecords.get(0);
+                    double usedTime=(double)((new Date()).getTime()-u.getStartTime().getTime())/(1000);
+                    int h= (int) (usedTime/(60*60));
+                    int m= (int) (usedTime%(60*60)/60);
+                    int s= (int) (usedTime-h*3600-m*60);
+                    info+="<br>已用时间："+h+"时"+m+"分"+s+"秒";
+                    usedTime/=3600;
+                    usedTime=(double)Math.round(usedTime * 100) / 100;
+                    double cost=(double)Math.round(usedTime* 5 *100)/100;
+                    info+="<br>已产生费用：￥"+cost;
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
                 code=-1;
@@ -228,7 +242,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
         else {
             code=0;
         }
-        return "{\"code\":"+code+"}";
+        return "{\"code\":"+code+",\"info\":\""+info+"\"}";
     }
 
     @Override
@@ -267,10 +281,14 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     public String resetAppointInfo(HttpServletRequest httpServletRequest) {
         int code;
         if(utils.isUserLogin(httpServletRequest)){
+            String info=httpServletRequest.getParameter("info");
             code=1;
             DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
             try {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                appointmentRecord.setInfo(info);
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
                 code=-1;
@@ -326,6 +344,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 usageRecord.setStatus(0);
                 usageRecord.setRid(appointmentRecord.getRid());
                 usageRecord.setReqdate(date);
+                usageRecord.setCost(0.00);
                 usageRecordMapper.insert(usageRecord);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -341,6 +360,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
     @Override
     public String showInfo(HttpServletRequest httpServletRequest) {
         int code;
+        String info="";
         if(utils.isUserLogin(httpServletRequest)){
             code=1;
             DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
@@ -348,6 +368,25 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 Date date = dateFormat.parse(httpServletRequest.getParameter("reqdate"));
                 AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+                info+="申请时间:"+simpleDateFormat.format(appointmentRecord.getReqdate());
+                if(appointmentRecord.getInfo()==null){
+                    info+="<br>申请理由:无";
+                }else {
+                    info+="<br>申请理由:"+appointmentRecord.getInfo();
+                }
+                UsageRecordExample usageRecordExample=new UsageRecordExample();
+                usageRecordExample.createCriteria().andReqdateEqualTo(date);
+                List<UsageRecord> usageRecords=usageRecordMapper.selectByExample(usageRecordExample);
+                if(usageRecords.size()>0){
+                    UsageRecord u =usageRecords.get(0);
+                    double usedTime=(double)((new Date()).getTime()-u.getStartTime().getTime())/(1000);
+                    int h= (int) (usedTime/(60*60));
+                    int m= (int) (usedTime%(60*60)/60);
+                    int s= (int) (usedTime-h*3600-m*60);
+                    info+="<br>已用时间："+h+"时"+m+"分"+s+"秒";
+                }
+
             } catch (ParseException e) {
                 e.printStackTrace();
                 code=-1;
@@ -356,7 +395,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
         else {
             code=0;
         }
-        return "{\"code\":"+code+"}";
+        return "{\"code\":"+code+",\"info\":\""+info+"\"}";
     }
 
     @Override
@@ -390,6 +429,98 @@ public class AppointmentRecordService implements IAppointmentRecordService {
             code=0;
         }
         return "{\"code\":"+code+",\"cost\":\""+costStr+"\"}";
+    }
+
+    @Override
+    public String showAppoint(HttpServletRequest httpServletRequest) {
+        int rid=Integer.parseInt(httpServletRequest.getParameter("rid"));
+        int code;
+        String appointInfo="";
+        String appointId="";
+        if(utils.isAdminLogin(httpServletRequest)) {
+            code=1;
+            AppointmentRecordExample appointmentRecordExample = new AppointmentRecordExample();
+            appointmentRecordExample.createCriteria().andRidEqualTo(rid).andArstatusEqualTo(3);
+            List<AppointmentRecord> appointmentRecords = appointmentRecordMapper.selectByExample(appointmentRecordExample);
+            if (appointmentRecords.size() > 0) {
+                AppointmentRecord a = appointmentRecords.get(0);
+                int uid = a.getUid();
+                String info = a.getInfo();
+                DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                appointId = dateFormat.format(a.getReqdate());
+                StUser stUser = stUserMapper.selectByPrimaryKey(uid);
+                String uname = stUser.getUname();
+                appointInfo+="申请人："+uname;
+                appointInfo+="<br>申请事由："+info;
+            }
+        }else {
+            code=0;
+        }
+        return "{\"code\":"+code+",\"info\":\""+appointInfo+"\",\"appointId\":\""+appointId+"\"}";
+    }
+
+    @Override
+    public String dealAppoint(HttpServletRequest httpServletRequest) {
+        int code=-1;
+        if(utils.isAdminLogin(httpServletRequest)){
+            DateFormat dateFormat=new SimpleDateFormat("yyyyMMddHHmmss");
+            String appointId=httpServletRequest.getParameter("appointId");
+            try {
+                Date date=dateFormat.parse(appointId);
+                int c= Integer.parseInt(httpServletRequest.getParameter("code"));
+                AppointmentRecord appointmentRecord=appointmentRecordMapper.selectByPrimaryKey(date);
+                if(c==1){
+                    appointmentRecord.setArstatus(4);
+                    appointmentRecord.setDealdate(new Date());
+                    code=1;
+                }else {
+                    appointmentRecord.setArstatus(5);
+                    appointmentRecord.setDealdate(new Date());
+                    code=-1;
+                }
+                appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            code=0;
+        }
+        return "{\"code\":"+code+"}";
+    }
+
+    @Override
+    public String showDealHistory(HttpServletRequest httpServletRequest) {
+        int code;
+        String aname="";
+        JSONArray jsonArray=new JSONArray();
+        if(utils.isAdminLogin(httpServletRequest)){
+            code=1;
+           aname = (String) httpServletRequest.getSession().getAttribute("uname");
+            AppointmentRecordExample  appointmentRecordExample=new AppointmentRecordExample();
+            appointmentRecordExample.createCriteria().andArtypeEqualTo(0).andArstatusBetween(4,7);
+            List<AppointmentRecord> appointmentRecords=appointmentRecordMapper.selectByExample(appointmentRecordExample);
+            if(appointmentRecords.size()>0){
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+                for (AppointmentRecord a:appointmentRecords
+                     ) {
+                    JSONObject jsonObject=new JSONObject();
+                    StUser stUser=stUserMapper.selectByPrimaryKey(a.getUid());
+                    String uname=stUser.getUname();
+                    String status=a.getArstatus()==5?"拒绝申请":"同意申请";
+                    String rid=utils.ridToShowId(a.getRid());
+                    String time=simpleDateFormat.format(a.getReqdate());
+                    jsonObject.put("uname",uname);
+                    jsonObject.put("showId",rid);
+                    jsonObject.put("date",time);
+                    jsonObject.put("status",status);
+                    jsonArray.put(jsonObject);
+                }
+            }
+        }else {
+            code=0;
+        }
+        return "{\"code\":"+code+",\"aname\":\""+aname+"\",\"historyList\":"+jsonArray+"}";
     }
 
     private String getString(List<UsageRecord> usageRecords, int i) {

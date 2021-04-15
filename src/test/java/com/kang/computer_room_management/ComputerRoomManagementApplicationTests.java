@@ -44,32 +44,32 @@ class ComputerRoomManagementApplicationTests {
 //        for(TableTest test:tableTests){
 //            System.out.println("id:"+test.getId()+" name:"+test.getName()+" info:"+test.getInfo());
 //        }
-        ComputerRoom computerRoom=new ComputerRoom();
-        computerRoom.setRstatus(1);
-        List<ComputerRoom> computerRooms=computerRoomService.findRoomsAs(computerRoom);
-        for(ComputerRoom computerRoom1:computerRooms){
-            System.out.println("id:"+computerRoom1.getRid()+" status:"+computerRoom1.getRstatus());
-        }
-        List<ComputerRoom> computerRoomList=new ArrayList<>();
-        for(int i=1;i<=15;i++){
-            computerRoomList.add(computerRoomMapper.selectByPrimaryKey(i));
-        }
-        for (ComputerRoom computerRoom1:computerRoomList
-             ) {
-            System.out.println(computerRoom1.getRid());
-        }
-        //添加机房及机位
-//        for(int i=1;i<21;i++){
-//            ComputerRoom computerRoom=new ComputerRoom();
-//            computerRoom.setRstatus(1);
-//            computerRoomMapper.insert(computerRoom);
-//            for(int j=1;j<31;j++){
-//                Computer computer=new Computer();
-//                computer.setRid(i);
-//                computer.setCstatus(1);
-//                computerMapper.insert(computer);
-//            }
+//        ComputerRoom computerRoom=new ComputerRoom();
+//        computerRoom.setRstatus(1);
+//        List<ComputerRoom> computerRooms=computerRoomService.findRoomsAs(computerRoom);
+//        for(ComputerRoom computerRoom1:computerRooms){
+//            System.out.println("id:"+computerRoom1.getRid()+" status:"+computerRoom1.getRstatus());
 //        }
+//        List<ComputerRoom> computerRoomList=new ArrayList<>();
+//        for(int i=1;i<=15;i++){
+//            computerRoomList.add(computerRoomMapper.selectByPrimaryKey(i));
+//        }
+//        for (ComputerRoom computerRoom1:computerRoomList
+//             ) {
+//            System.out.println(computerRoom1.getRid());
+//        }
+        //添加机房及机位
+        for(int i=1;i<21;i++){
+            ComputerRoom computerRoom=new ComputerRoom();
+            computerRoom.setRstatus(3);
+            computerRoomMapper.insert(computerRoom);
+            for(int j=1;j<31;j++){
+                Computer computer=new Computer();
+                computer.setRid(i);
+                computer.setCstatus(1);
+                computerMapper.insert(computer);
+            }
+        }
 //        for(int i=50;i<600;i++){
 //            Computer computer=new Computer();
 //            computer.setCid(i);

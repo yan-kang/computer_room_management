@@ -8,4 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface IAdminService {
     Admin login(Admin admin);
     String admin(HttpServletRequest httpServletRequest, Model model);
+    String resetPassword(HttpServletRequest httpServletRequest);
+    String feeSettlement(HttpServletRequest httpServletRequest);
+    String queryUnfeeOrder(HttpServletRequest httpServletRequest);
 }
