@@ -52,7 +52,6 @@ public class ComputerService implements IComputerService {
             List<Computer> computers = computerMapper.selectByExample(computerExample);
             return computers.size()>0?computers:null;
         }catch (RuntimeException e){
-            utils.printLog(e);
             return null;
         }
     }
@@ -131,6 +130,8 @@ public class ComputerService implements IComputerService {
                 appointmentRecord.setCid(cid + ((int) httpServletRequest.getSession().getAttribute("nowRoom") * 30 - 30));
                 appointmentRecord.setArtype(1);
                 appointmentRecord.setReqdate(new Date());
+                appointmentRecord.setDealdate(new Date());
+                appointmentRecord.setInfo("预约机位");
                 appointmentRecord.setArstatus(0);
                 appointmentRecordMapper.insert(appointmentRecord);
                 setComputerStatusDown(cid + (int) httpServletRequest.getSession().getAttribute("nowRoom") * 30 - 30);

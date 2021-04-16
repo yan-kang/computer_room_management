@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,18 +23,18 @@ public class ComputerRoomController {
     }
 
     @ResponseBody
-    @RequestMapping("/chooseRoom")
+    @RequestMapping(path = "/chooseRoom",method = RequestMethod.POST)
     public String chooseRoom(HttpServletRequest httpServletRequest){
         return computerRoomService.chooseRoom(httpServletRequest);
     }
     @ResponseBody
-    @RequestMapping("/queryComputerRooms")
+    @RequestMapping(path = "/queryComputerRooms",method = RequestMethod.POST)
     public String queryRoomStatusBy(@RequestParam("rid") Integer rid, HttpServletRequest httpServletRequest){
         return computerRoomService.queryRoomStatusBy(rid,httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/refreshInfo")
+    @RequestMapping(path = "/refreshInfo",method = RequestMethod.POST)
     public String refreshInfo(HttpServletRequest httpServletRequest){
         return computerRoomService.refreshInfo(httpServletRequest);
     }

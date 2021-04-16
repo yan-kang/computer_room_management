@@ -5,6 +5,7 @@ import com.kang.computer_room_management.service.IComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,105 +22,98 @@ public class AppointmentController {
     }
 
 
-//    @RequestMapping("/结算")
-//    public String unAppoint(Model model,Computer computer){
-//        computerService.setComputerStatusUp(computer);
-//        model.addAttribute(computer);
-//        model.addAttribute("num",computer.getCid()%30>0?computer.getCid()%30:30);
-//        return "unAppointResult";
-//    }
-    @RequestMapping("/historyPage")
+    @RequestMapping(path = "/historyPage",method = RequestMethod.GET)
     public String historyPage(){
         return "history";
     }
     @ResponseBody
-    @RequestMapping("/showHistory")
+    @RequestMapping(path = "/showHistory",method = RequestMethod.POST)
     public String showHistory(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showHistory(httpServletRequest);
     }
 
-    @RequestMapping("/dealHistory")
+    @RequestMapping(path = "/dealHistory",method = RequestMethod.GET)
     public String dealHistory(){
         return "dealHistory";
     }
     @ResponseBody
-    @RequestMapping("/showDealHistory")
+    @RequestMapping(path = "/showDealHistory",method = RequestMethod.POST)
     public String showDealHistory(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showDealHistory(httpServletRequest);
     }
 
-    @RequestMapping("/appointmentPage")
+    @RequestMapping(path = "/appointmentPage",method = RequestMethod.GET)
     public String appointmentPage(){
         return "appointment";
     }
     @ResponseBody
-    @RequestMapping("/showAppointment")
+    @RequestMapping(path = "/showAppointment",method = RequestMethod.POST)
     public String showAppointment(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showAppointment(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/startUseComputer")
+    @RequestMapping(path = "/startUseComputer",method = RequestMethod.POST)
     public String startUseComputer(HttpServletRequest httpServletRequest){
         return appointmentRecordService.startUseComputer(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/cancelComputerAppoint")
+    @RequestMapping(path = "/cancelComputerAppoint",method = RequestMethod.POST)
     public String cancelComputerAppoint(HttpServletRequest httpServletRequest){
         return appointmentRecordService.cancelComputerAppoint(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/useInfo")
+    @RequestMapping(path="/useInfo",method = RequestMethod.POST)
     public String useInfo(HttpServletRequest httpServletRequest){
         return appointmentRecordService.useInfo(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/endUseComputer")
+    @RequestMapping(path = "/endUseComputer",method = RequestMethod.POST)
     public String endUseComputer(HttpServletRequest httpServletRequest){
         return appointmentRecordService.endUseComputer(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/resetAppointInfo")
+    @RequestMapping(path = "/resetAppointInfo",method = RequestMethod.POST)
     public String resetAppointInfo(HttpServletRequest httpServletRequest){
         return appointmentRecordService.resetAppointInfo(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/cancelRoomAppoint")
+    @RequestMapping(path = "/cancelRoomAppoint",method = RequestMethod.POST)
     public String cancelRoomAppoint(HttpServletRequest httpServletRequest){
         return appointmentRecordService.cancelRoomAppoint(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/startUseRoom")
+    @RequestMapping(path = "/startUseRoom",method = RequestMethod.POST)
     public String startUseRoom(HttpServletRequest httpServletRequest){
         return appointmentRecordService.startUseRoom(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/showInfo")
+    @RequestMapping(path = "/showInfo",method = RequestMethod.POST)
     public String showInfo(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showInfo(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/endUseRoom")
+    @RequestMapping(path = "/endUseRoom",method = RequestMethod.POST)
     public String endUseRoom(HttpServletRequest httpServletRequest){
         return appointmentRecordService.endUseRoom(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/showAppoint")
+    @RequestMapping(path = "/showAppoint",method = RequestMethod.POST)
     public String showAppoint(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showAppoint(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping("/dealAppoint")
+    @RequestMapping(path = "/dealAppoint",method = RequestMethod.POST)
     public String dealAppoint(HttpServletRequest httpServletRequest){
         return  appointmentRecordService.dealAppoint(httpServletRequest);
     }

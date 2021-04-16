@@ -117,7 +117,7 @@ public class UserService implements IUserService {
     @Override
     public String register(HttpServletRequest httpServletRequest, Model model) {
         HttpSession httpSession = httpServletRequest.getSession();
-        if (httpServletRequest.getParameter("uname") != "") {
+        if (!httpServletRequest.getParameter("uname").equals("")) {
             String msg = "";
             boolean success;
             int a=0;

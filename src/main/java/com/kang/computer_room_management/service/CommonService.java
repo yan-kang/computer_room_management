@@ -26,20 +26,6 @@ public class CommonService implements ICommonService {
     }
     Utils utils=new Utils();
     @Override
-    public boolean isLogin(HttpSession httpSession) {
-        try{
-            if(httpSession.getAttribute("uname")==null) {
-                return false;
-            }
-            else
-            return true;
-        }catch (RuntimeException e){
-            utils.printLog(e);
-            return false;
-        }
-    }
-
-    @Override
     public String index(HttpServletRequest httpServletRequest, Model model) {
         HttpSession httpSession=httpServletRequest.getSession();
         boolean isLogin;
