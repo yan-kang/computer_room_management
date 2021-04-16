@@ -130,6 +130,8 @@ public class ComputerService implements IComputerService {
                 appointmentRecord.setCid(cid + ((int) httpServletRequest.getSession().getAttribute("nowRoom") * 30 - 30));
                 appointmentRecord.setArtype(1);
                 appointmentRecord.setReqdate(new Date());
+                appointmentRecord.setDealdate(new Date());
+                appointmentRecord.setInfo("预约机位");
                 appointmentRecord.setArstatus(0);
                 appointmentRecordMapper.insert(appointmentRecord);
                 setComputerStatusDown(cid + (int) httpServletRequest.getSession().getAttribute("nowRoom") * 30 - 30);

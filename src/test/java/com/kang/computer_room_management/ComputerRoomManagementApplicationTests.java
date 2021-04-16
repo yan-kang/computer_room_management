@@ -59,17 +59,17 @@ class ComputerRoomManagementApplicationTests {
 //            System.out.println(computerRoom1.getRid());
 //        }
         //添加机房及机位
-        for(int i=1;i<21;i++){
-            ComputerRoom computerRoom=new ComputerRoom();
-            computerRoom.setRstatus(3);
-            computerRoomMapper.insert(computerRoom);
-            for(int j=1;j<31;j++){
-                Computer computer=new Computer();
-                computer.setRid(i);
-                computer.setCstatus(1);
-                computerMapper.insert(computer);
-            }
-        }
+//        for(int i=1;i<21;i++){
+//            ComputerRoom computerRoom=new ComputerRoom();
+//            computerRoom.setRstatus(3);
+//            computerRoomMapper.insert(computerRoom);
+//            for(int j=1;j<31;j++){
+//                Computer computer=new Computer();
+//                computer.setRid(i);
+//                computer.setCstatus(1);
+//                computerMapper.insert(computer);
+//            }
+//        }
 //        for(int i=50;i<600;i++){
 //            Computer computer=new Computer();
 //            computer.setCid(i);
