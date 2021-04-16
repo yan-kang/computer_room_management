@@ -60,7 +60,7 @@ public class AdminService implements IAdminService {
             model.addAttribute("uname",httpSession.getAttribute("uname"));
             showIndex(model, utils, computerRoomService, computerRoomMapper, computerService);
         }
-        return isLogin?"aindex":"redirect:/login";
+        return isLogin?"admin/aindex":"redirect:/login";
     }
 
     @Override

@@ -22,23 +22,23 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping(path="/resetPassword",method = RequestMethod.PUT)
+    @RequestMapping(path="/admin/resetPassword",method = RequestMethod.PUT)
     public String resetPassword(HttpServletRequest httpServletRequest){
         return adminService.resetPassword(httpServletRequest);
     }
 
-    @RequestMapping(path = "/feePage",method = RequestMethod.GET)
+    @RequestMapping(path = "/admin/feePage",method = RequestMethod.GET)
     public String feePage(){
-        return "feeSettlement";
+        return "admin/feeSettlement";
     }
     @ResponseBody
-    @RequestMapping(path = "/feeSettlement",method = RequestMethod.PUT)
+    @RequestMapping(path = "/admin/feeSettlement",method = RequestMethod.PUT)
     public String feeSettlement(HttpServletRequest httpServletRequest){
         return adminService.feeSettlement(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping(path = "/queryUnfeeOrder",method = RequestMethod.GET)
+    @RequestMapping(path = "/admin/queryUnfeeOrder",method = RequestMethod.GET)
     public String queryUnfeeOrder(HttpServletRequest httpServletRequest){
         return adminService.queryUnfeeOrder(httpServletRequest);
     }

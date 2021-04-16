@@ -32,12 +32,12 @@ public class AppointmentController {
         return appointmentRecordService.showHistory(httpServletRequest);
     }
 
-    @RequestMapping(path = "/dealHistory",method = RequestMethod.GET)
+    @RequestMapping(path = "/admin/dealHistory",method = RequestMethod.GET)
     public String dealHistory(){
-        return "dealHistory";
+        return "admin/dealHistory";
     }
     @ResponseBody
-    @RequestMapping(path = "/showDealHistory",method = RequestMethod.GET)
+    @RequestMapping(path = "/admin/showDealHistory",method = RequestMethod.GET)
     public String showDealHistory(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showDealHistory(httpServletRequest);
     }
@@ -107,13 +107,13 @@ public class AppointmentController {
     }
 
     @ResponseBody
-    @RequestMapping(path = "/showAppoint",method = RequestMethod.GET)
+    @RequestMapping(path = "/admin/showAppoint",method = RequestMethod.GET)
     public String showAppoint(HttpServletRequest httpServletRequest){
         return appointmentRecordService.showAppoint(httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping(path = "/dealAppoint",method = RequestMethod.PUT)
+    @RequestMapping(path = "/admin/dealAppoint",method = RequestMethod.PUT)
     public String dealAppoint(HttpServletRequest httpServletRequest){
         return  appointmentRecordService.dealAppoint(httpServletRequest);
     }

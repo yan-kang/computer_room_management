@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-    <title>费用结算</title>
+    <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+    <title>处理记录</title>
     <style type="text/css">
         .center {
             position: absolute;
@@ -16,7 +16,7 @@
         }
     </style>
 </head>
-<body class="is-preload" onload="queryUnfeeOrder();">
+<body class="is-preload" onload="queryHistory();">
 <!-- Wrapper -->
 <div id="wrapper">
 
@@ -26,10 +26,10 @@
 
             <!-- Logo -->
             <a href="/admin" class="logo">
-                <span class="symbol"><img src="images/首页.png" alt="" onclick="queryUnfeeOrder();"/></span>
+                <span class="symbol"><img src="../images/首页.png" alt="" onclick="queryHistory();"/></span>
             </a>
             <div class="logo">
-                <span class="title">待结算列表&nbsp&nbsp</span>
+                <span class="title">处理记录&nbsp&nbsp</span>
             </div>
             <!-- Nav -->
             <nav>
@@ -44,10 +44,11 @@
     <!-- Menu -->
     <nav id="menu">
         <h2><span id="uname"></span> </h2>
+        <h5><span id="showuprofile"></span></h5><br>
         <ul>
             <li><a href="/admin">首页</a></li>
-            <li><a href="/dealHistory" >处理记录</a></li>
-            <li><a href="#" onclick="queryUnfeeOrder();">费用结算</a></li>
+            <li><a href="#" onclick="queryHistory();">处理记录</a></li>
+            <li><a href="/admin/feePage" >费用结算</a></li>
             <li><a href="#" onclick="resetInfo();">修改密码</a></li>
             <li><a href="/logOut">退出登录</a></li>
         </ul>
@@ -76,19 +77,50 @@
                                         时间
                                     </th>
                                     <th>
-                                        使用者
+                                        申请人
                                     </th>
                                     <th>
-                                        费用
-                                    </th>
-                                    <th>
-
+                                        处理结果
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody id="tbody">
+                                <!--                                <tr class="error">-->
+                                <!--                                    <td>-->
+                                <!--                                        1-->
+                                <!--                                    </td>-->
+                                <!--                                    <td>-->
+                                <!--                                        102-->
+                                <!--                                    </td>-->
+                                <!--                                    <td>-->
+                                <!--                                        02/04/2012-->
+                                <!--                                    </td>-->
+                                <!--                                    <td>-->
+                                <!--                                        已结清-->
+                                <!--                                    </td>-->
+                                <!--                                </tr>-->
                                 </tbody>
                             </table>
+                            <ul class="pagination">
+                                <li>
+                                    <a href="#">Prev</a>
+                                </li>
+                                <li>
+                                    <a href="#">1</a>
+                                </li>
+                                <li>
+                                    <a href="#">2</a>
+                                </li>
+                                <li>
+                                    <a href="#">3</a>
+                                </li>
+                                <li>
+                                    <a href="#">4</a>
+                                </li>
+                                <li>
+                                    <a href="#">Next</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -191,7 +223,7 @@
                 "newPsswd":newPassword
             }
             $.ajax({
-                url:"/resetPassword",
+                url:"/admin/resetPassword",
                 type: 'put',
                 data:jsonModel,
                 async:false,
@@ -227,11 +259,11 @@
     }
 </script>
 <!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/browser.min.js"></script>
-<script src="assets/js/breakpoints.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
 
 
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
@@ -240,15 +272,15 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script>
-    function queryUnfeeOrder() {
+    function queryHistory() {
         var jsonModel={
 
         }
         $.ajax({
-                url: "/queryUnfeeOrder",
+                url: "/admin/showDealHistory",
                 type: 'get',
                 data: jsonModel,
-                async: true,
+                async: false,
                 success:function (data) {
                     if(data!=null) {
                         var data = JSON.parse(data);
@@ -256,26 +288,49 @@
                             var aname = data.aname;
                             var id=1;
                             var tbody="";
-                            if(data.arr!==0) {
-                                data.orderList.forEach(function (history) {
-                                        var realId=history.id;
-                                        var rid=history.rid;
-                                        var time=history.datetime;
-                                        var uname=history.uname;
-                                        var cost=history.cost;
-                                        tbody += "<tr class=\"success\">\n" +
-                                            "    <td>" + id + "</td>\n" +
-                                            "    <td>" + rid + "</td>\n" +
-                                            "    <td>" + time + "</td>\n" +
-                                            "    <td>" + uname + "</td>\n" +
-                                            "    <td>" + cost + "</td>\n" +
-                                            "    <td><button type=\"button\" class=\"button primary small\" onclick=\"feeSettlement("+realId+");\">结算</button>\n" +
-                                            "</tr>";
-                                    id++;
-                                })
-                            }
-                            $("#uname").html(aname);
+                            data.historyList.forEach(function (history) {
+                                var rid=history.showId;
+                                var time=history.date;
+                                var uname=history.uname;
+                                var status=history.status;
+                                //console.log(history)
+                                if(id%4===1) {
+                                    tbody += "<tr class=\"error\">\n" +
+                                        "    <td>" + id + "</td>\n" +
+                                        "    <td>" + rid + "</td>\n" +
+                                        "    <td>" + time + "</td>\n" +
+                                        "    <td>" + uname + "</td>\n" +
+                                        "    <td>" + status + "</td>\n" +
+                                        "</tr>";
+                                }else if(id%4===2){
+                                    tbody += "<tr class=\"success\">\n" +
+                                        "    <td>" + id + "</td>\n" +
+                                        "    <td>" + rid + "</td>\n" +
+                                        "    <td>" + time + "</td>\n" +
+                                        "    <td>" + uname + "</td>\n" +
+                                        "    <td>" + status + "</td>\n" +
+                                        "</tr>";
+                                }else if (id%4===3){
+                                    tbody += "<tr class=\"info\">\n" +
+                                        "    <td>" + id + "</td>\n" +
+                                        "    <td>" + rid + "</td>\n" +
+                                        "    <td>" + time + "</td>\n" +
+                                        "    <td>" + uname + "</td>\n" +
+                                        "    <td>" + status + "</td>\n" +
+                                        "</tr>";
+                                }else if (id%4===0){
+                                    tbody += "<tr class=\"warning\">\n" +
+                                        "    <td>" + id + "</td>\n" +
+                                        "    <td>" + rid + "</td>\n" +
+                                        "    <td>" + time + "</td>\n" +
+                                        "    <td>" + uname + "</td>\n" +
+                                        "    <td>" + status + "</td>\n" +
+                                        "</tr>";
+                                }
+                                id++;
+                            })
                             $("#tbody").html(tbody);
+                            $("#uname").html(aname);
                         }else{
                             $("#myModal").modal();
                         }
@@ -284,46 +339,9 @@
             }
         )
     }
-    function feeSettlement(id) {
-        $("#msg").html("是否结算？")
-        $("#goFee").html("                <button type=\"button\" class=\"button primary small\"  data-dismiss=\"modal\" onclick=\"goFee("+id+");\">确定</button>\n" +
-            "                <button type=\"button\" class=\"button primary small\"  data-dismiss=\"modal\" onclick=\"queryUnfeeOrder();\">取消</button>");
-        $("#actionResult").modal()
-    }
-    function goFee(id) {
-        var jsonModel={
-            "id":id
-        }
-        $.ajax({
-            url: "/feeSettlement",
-            type: 'put',
-            data:jsonModel,
-            async: false,
-            success:function (data) {
-                if(data!=null){
-                    var data=JSON.parse(data);
-                    if(data.code===0){
-                        $("#myModal").modal()
-                    }else{
-                        queryUnfeeOrder();
-                    }
-                }
-            }
-        })
+    function goLogin() {
+        window.location="/login"
     }
 </script>
-<div class="modal fade center" id="actionResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="display: inline-block;width: auto">
-        <div class="modal-content">
-            <div class="modal-header">
-                <!--                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-                <h4 class="modal-title" id="msg"></h4>
-            </div>
-            <div class="modal-footer" id="goFee">
-                <button type="button" class="button primary small"  data-dismiss="modal" onclick="queryUnfeeOrder();">确定</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
 </body>
 </html>

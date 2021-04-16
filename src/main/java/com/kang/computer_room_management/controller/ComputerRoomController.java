@@ -34,7 +34,7 @@ public class ComputerRoomController {
     }
 
     @ResponseBody
-    @RequestMapping(path = "/refreshInfo",method = RequestMethod.GET)
+    @RequestMapping(path = "/admin/refreshInfo",method = RequestMethod.GET)
     public String refreshInfo(HttpServletRequest httpServletRequest){
         return computerRoomService.refreshInfo(httpServletRequest);
     }
