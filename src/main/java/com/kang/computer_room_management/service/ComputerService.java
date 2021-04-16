@@ -52,7 +52,6 @@ public class ComputerService implements IComputerService {
             List<Computer> computers = computerMapper.selectByExample(computerExample);
             return computers.size()>0?computers:null;
         }catch (RuntimeException e){
-            utils.printLog(e);
             return null;
         }
     }

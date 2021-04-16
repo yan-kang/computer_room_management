@@ -175,7 +175,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 usageRecordMapper.insert(usageRecord);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -200,7 +200,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 computerMapper.updateByPrimaryKeySelective(computer);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -235,7 +235,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                     info+="<br>已产生费用：￥"+cost;
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -267,7 +267,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 }
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -290,7 +290,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 appointmentRecord.setInfo(info);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -316,7 +316,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 computerRoomMapper.updateByPrimaryKeySelective(computerRoom);
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -347,7 +347,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 usageRecord.setCost(0.00);
                 usageRecordMapper.insert(usageRecord);
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -388,7 +388,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 }
 
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -421,7 +421,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                     costStr = getString(usageRecords, 100);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+
                 code=-1;
             }
         }
@@ -480,7 +480,7 @@ public class AppointmentRecordService implements IAppointmentRecordService {
                 }
                 appointmentRecordMapper.updateByPrimaryKeySelective(appointmentRecord);
             } catch (ParseException e) {
-                e.printStackTrace();
+
             }
         }
         else{

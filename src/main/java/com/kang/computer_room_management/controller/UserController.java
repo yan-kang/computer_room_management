@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,18 +22,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping("/login")
+    @RequestMapping(path = "/login",method = RequestMethod.GET)
     public String login(){
         return "login";
     }
 
     @ResponseBody
-    @RequestMapping("/loginAction")
+    @RequestMapping(path = "/loginAction",method = RequestMethod.POST)
     public String loginAction(Model model, HttpServletRequest httpServletRequest){
         return userService.loginServer(httpServletRequest, model);
     }
     //退出登录
-    @RequestMapping("/logOut")
+    @RequestMapping(path = "/logOut",method = RequestMethod.GET)
     public String logOut(HttpServletRequest httpServletRequest){
         HttpSession httpSession=httpServletRequest.getSession();
         httpSession.invalidate();
@@ -40,18 +41,18 @@ public class UserController {
     }
 
     @ResponseBody
-    @RequestMapping("/registerAction")
+    @RequestMapping(path = "/registerAction",method = RequestMethod.POST)
     public String registerAction(HttpServletRequest httpServletRequest, Model model){
         return userService.register(httpServletRequest, model);
     }
 
-    @RequestMapping("/register")
+    @RequestMapping(path = "/register",method = RequestMethod.GET)
     public String registerPage(){
         return "register";
     }
 
     @ResponseBody
-    @RequestMapping("/checkName")
+    @RequestMapping(path = "/checkName",method = RequestMethod.POST)
     public String checkName(@RequestParam("uname") String uname){
         StUser stUser=new StUser();
         stUser.setUname(uname);
@@ -66,7 +67,7 @@ public class UserController {
     }
 
     @ResponseBody
-    @RequestMapping("/resetInfo")
+    @RequestMapping(path = "/resetInfo",method = RequestMethod.POST)
     public String resetInfo(HttpServletRequest httpServletRequest){
         return userService.resetInfo(httpServletRequest);
     }
