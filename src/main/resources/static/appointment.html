@@ -183,7 +183,6 @@
         var profile=document.getElementById("uprofile").value;
         var password=document.getElementById("psswd").value;
         var newPassword=document.getElementById("newPsswd").value;
-        console.log(profile)
         if(newPassword!==""&&password===""){
             document.getElementById("psswd").setAttribute("placeholder","请填写密码");
             document.getElementById("psswd").setAttribute("style","color:red");
@@ -203,7 +202,7 @@
             }
             $.ajax({
                 url:"/resetInfo",
-                type: 'post',
+                type: 'put',
                 data:jsonModel,
                 async:false,
                 success:function (data) {
@@ -253,7 +252,7 @@
         }
         $.ajax({
                 url: "/showAppointment",
-                type: 'post',
+                type: 'get',
                 data: jsonModel,
                 async: false,
                 success:function (data) {
@@ -360,7 +359,7 @@
         }
         $.ajax({
             url: "/startUseComputer",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -382,7 +381,7 @@
         }
         $.ajax({
             url: "/cancelComputerAppoint",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -404,7 +403,7 @@
         }
         $.ajax({
             url: "/useInfo",
-            type: 'post',
+            type: 'get',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -426,7 +425,7 @@
         }
         $.ajax({
             url: "/endUseComputer",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -453,10 +452,9 @@
             "reqdate":reqdate,
             "info":document.getElementById("reason").value
         }
-        console.log(document.getElementById("reason").value)
         $.ajax({
             url: "/resetAppointInfo",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -478,7 +476,7 @@
         }
         $.ajax({
             url: "/cancelRoomAppoint",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -500,7 +498,7 @@
         }
         $.ajax({
             url: "/startUseRoom",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -522,7 +520,7 @@
         }
         $.ajax({
             url: "/showInfo",
-            type: 'post',
+            type: 'get',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -545,7 +543,7 @@
         }
         $.ajax({
             url: "/endUseRoom",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {

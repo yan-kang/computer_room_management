@@ -28,13 +28,13 @@ public class ComputerRoomController {
         return computerRoomService.chooseRoom(httpServletRequest);
     }
     @ResponseBody
-    @RequestMapping(path = "/queryComputerRooms",method = RequestMethod.POST)
+    @RequestMapping(path = "/queryComputerRooms",method = RequestMethod.GET)
     public String queryRoomStatusBy(@RequestParam("rid") Integer rid, HttpServletRequest httpServletRequest){
         return computerRoomService.queryRoomStatusBy(rid,httpServletRequest);
     }
 
     @ResponseBody
-    @RequestMapping(path = "/refreshInfo",method = RequestMethod.POST)
+    @RequestMapping(path = "/refreshInfo",method = RequestMethod.GET)
     public String refreshInfo(HttpServletRequest httpServletRequest){
         return computerRoomService.refreshInfo(httpServletRequest);
     }

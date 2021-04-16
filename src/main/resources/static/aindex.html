@@ -198,7 +198,7 @@
             }
             $.ajax({
                 url:"/resetPassword",
-                type: 'post',
+                type: 'put',
                 data:jsonModel,
                 async:false,
                 success:function (data) {
@@ -240,7 +240,7 @@
         }
         $.ajax({
             url: "/refreshInfo",
-            type: 'post',
+            type: 'get',
             data: jsonModel,
             async: true,
             success:function (data) {
@@ -271,13 +271,12 @@
     }
     function dealRoom(rid) {
         //处理
-        console.log(rid);
         var jsonModel={
             "rid":rid
         }
         $.ajax({
             url: "/showAppoint",
-            type: 'post',
+            type: 'get',
             data: jsonModel,
             async: false,
             success:function (data) {
@@ -304,10 +303,9 @@
             "appointId":appointId,
             "code":code
         }
-        console.log(appointId)
         $.ajax({
             url: "/dealAppoint",
-            type: 'post',
+            type: 'put',
             data: jsonModel,
             async: false,
             success:function (data) {

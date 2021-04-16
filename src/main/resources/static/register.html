@@ -103,7 +103,7 @@
             }
             $.ajax({
                 url: "/checkName",
-                type: 'post',
+                type: 'get',
                 data:modelJson,  //要发的数据，如果出现格式问题则 JSON.stringify(modeljson)
                 async: true,
                 success: function(data){

@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @ResponseBody
-    @RequestMapping(path = "/checkName",method = RequestMethod.POST)
+    @RequestMapping(path = "/checkName",method = RequestMethod.GET)
     public String checkName(@RequestParam("uname") String uname){
         StUser stUser=new StUser();
         stUser.setUname(uname);
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @ResponseBody
-    @RequestMapping(path = "/resetInfo",method = RequestMethod.POST)
+    @RequestMapping(path = "/resetInfo",method = RequestMethod.PUT)
     public String resetInfo(HttpServletRequest httpServletRequest){
         return userService.resetInfo(httpServletRequest);
     }

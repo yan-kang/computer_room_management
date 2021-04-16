@@ -25,7 +25,7 @@ public class ComputerController {
     }
 
     @ResponseBody
-    @RequestMapping(path = "/showComputers",method = RequestMethod.POST)
+    @RequestMapping(path = "/showComputers",method = RequestMethod.GET)
     public String showComputers(HttpServletRequest httpServletRequest){
         return computerService.showComputers(httpServletRequest);
     }

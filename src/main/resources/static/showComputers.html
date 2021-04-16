@@ -27,7 +27,7 @@
         }
         $.ajax({
             url: "/showComputers",
-            type: 'post',
+            type: 'get',
             data: jsonModel,
             async: true,
             success:function (data) {
@@ -195,7 +195,6 @@
         var profile=document.getElementById("uprofile").value;
         var password=document.getElementById("psswd").value;
         var newPassword=document.getElementById("newPsswd").value;
-        console.log(profile)
         if(newPassword!==""&&password===""){
             document.getElementById("psswd").setAttribute("placeholder","请填写密码");
             document.getElementById("psswd").setAttribute("style","color:red");
@@ -215,7 +214,7 @@
             }
             $.ajax({
                 url:"/resetInfo",
-                type: 'post',
+                type: 'put',
                 data:jsonModel,
                 async:false,
                 success:function (data) {
