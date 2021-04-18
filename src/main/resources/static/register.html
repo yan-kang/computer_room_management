@@ -49,18 +49,18 @@
                     <div class="row gtr-uniform">
                         <h2>请注册</h2>
                         <div class="col-6 col-12">
-                            <input type="text" name="uname" id="uname" value="" placeholder="用户名" onblur="checkName();"
+                            <input type="text" name="uname" id="uname" value="" placeholder="用户名" onfocus="beginCheckName();"
                                    minlength="5" onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" title="用户名长度不低于5位数字和字母组合" />
                         </div>
                         <span id="errname" style="color: red"></span>
                         <div class="col-6 col-12">
-                            <input type="password" name="upsswd" id="upsswd" value="" placeholder="密码" onblur="checkPassword();"
+                            <input type="password" name="upsswd" id="upsswd" value="" placeholder="密码" onfocus="beginCheckPsswd();" onblur="checkPassword();"
                                    minlength="6" onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" title="密码长度不低于6位数字和字母组合"
                             />
                             <span id="errpsswd" style="color: red"></span>
                         </div>
                         <div class="col-6 col-12">
-                            <input type="password" name="reupsswd" id="reupsswd" value="" placeholder="重复密码" onblur="checkRePassword();"
+                            <input type="password" name="reupsswd" id="reupsswd" value="" placeholder="重复密码" onfocus="beginCheckRePsswd();" onblur="checkRePassword();"
                                    minlength="6" onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" title="密码长度不低于6位数字和字母组合"/>
                             <span id="errrpsswd" style="color: red"></span>
                         </div>
@@ -87,65 +87,6 @@
 
 </script>
 <script>
-    var submitBtn=document.getElementById("submitBtn");
-    submitBtn.disabled=true;
-    var nsuccess=0;
-    var psuccess=0;
-    var repsuccess=0;
-    function checkName() {
-        var uname=document.getElementById("uname").value;
-        if (uname.length<5){
-            $("#errname").html("请检查用户名")
-            nsuccess=0;
-        }else {
-            var modelJson={
-                "uname":uname
-            }
-            $.ajax({
-                url: "/checkName",
-                type: 'get',
-                data:modelJson,  //要发的数据，如果出现格式问题则 JSON.stringify(modeljson)
-                async: true,
-                success: function(data){
-                    if(data!=null){
-                        var isExist=JSON.parse(data);
-                        if(isExist.isExist===1){
-                            nsuccess=0;
-                            $("#errname").html("用户名已存在")
-                        }else {
-                            nsuccess=1;
-                            $("#errname").html("")
-                            if(psuccess===1&&repsuccess===1)
-                                submitBtn.disabled=false;
-                        }
-                    }
-                }
-            })
-        }
-    }
-    function checkPassword() {
-        var upsswd=document.getElementById("upsswd").value;
-        if(upsswd.length<6){
-            $("#errpsswd").html("密码强度低")
-            psuccess=0;
-        }else {
-            $("#errpsswd").html("")
-            psuccess=1;
-        }
-    }
-    function checkRePassword() {
-        var reupsswd=document.getElementById("reupsswd").value;
-        var upsswd=document.getElementById("upsswd").value;
-        if(reupsswd!==upsswd){
-            repsuccess=0;
-            $("#errrpsswd").html("密码不一致");
-        }else {
-            repsuccess=1;
-            $("#errrpsswd").html("")
-            if(nsuccess===1&&psuccess===1)
-            submitBtn.disabled=false;
-        }
-    }
     function backTo() {
         window.location="/login"
     }
@@ -178,6 +119,104 @@
                 }
             })
     }
+</script>
+<script>
+    var submitBtn=document.getElementById("submitBtn");
+    submitBtn.disabled=true;
+    var nsuccess=0;
+    var psuccess=0;
+    var repsuccess=0;
+    var checkNameStatus=0;
+    var checkPsswdStatus=0;
+    var checkRePsswdStatus=0;
+    function beginCheckName() {
+        checkNameStatus=1;
+    }
+    function beginCheckPsswd() {
+        checkPsswdStatus=1;
+    }
+    function beginCheckRePsswd() {
+        checkRePsswdStatus=1;
+    }
+    function checkName() {
+        var uname=document.getElementById("uname").value;
+        if (uname.length<5&&uname.length>0){
+            document.getElementById("errname").style.color="red";
+            $("#errname").html("非法用户名")
+            nsuccess=0;
+        }else if(uname.length<1){
+            $("#errname").html("")
+            nsuccess=0;
+        }else {
+            var modelJson={
+                "uname":uname
+            }
+            $.ajax({
+                url: "/checkName",
+                type: 'get',
+                data:modelJson,  //要发的数据，如果出现格式问题则 JSON.stringify(modeljson)
+                async: true,
+                success: function(data){
+                    if(data!=null){
+                        var isExist=JSON.parse(data);
+                        if(isExist.isExist===1){
+                            nsuccess=0;
+                            document.getElementById("errname").style.color="red";
+                            $("#errname").html("用户名已存在")
+                        }else {
+                            nsuccess=1;
+                            document.getElementById("errname").style.color="#0f0";
+                            $("#errname").html("可用用户名")
+                        }
+                    }
+                }
+            })
+        }
+    }
+    function checkPassword() {
+        var upsswd=document.getElementById("upsswd").value;
+        if(upsswd.length<6&&upsswd.length>0){
+            $("#errpsswd").html("密码强度低")
+            psuccess=0;
+        }else if(upsswd.length<1){
+            $("#errpsswd").html("")
+            psuccess=0;
+        } else {
+            $("#errpsswd").html("")
+            psuccess=1;
+        }
+    }
+    function checkRePassword() {
+        var reupsswd=document.getElementById("reupsswd").value;
+        var upsswd=document.getElementById("upsswd").value;
+        if(reupsswd!==upsswd){
+            repsuccess=0;
+            $("#errrpsswd").html("密码不一致");
+        }else if(reupsswd.length<1){
+            $("#errpsswd").html("")
+            psuccess=0;
+        }else {
+            repsuccess=1;
+            $("#errrpsswd").html("")
+        }
+    }
+    function checkInfo() {
+            if(checkNameStatus===1){
+                checkName();
+            }
+            if(checkPsswdStatus===1){
+                checkPassword();
+            }
+            if (checkRePsswdStatus===1){
+                checkRePassword();
+            }
+            if(nsuccess===1&psuccess===1&repsuccess===1){
+                submitBtn.disabled=false;
+            }else {
+                submitBtn.disabled=true;
+            }
+    }
+    var check_Info = setInterval(checkInfo,200);
 </script>
 </body>
 </html>
