@@ -20,12 +20,10 @@ public class UserService implements IUserService {
     Utils utils=new Utils();
     final private StUserMapper stUserMapper;
     final private IAdminService adminService;
-    final private ICommonService commonService;
     @Autowired
-    public UserService(StUserMapper stUserMapper, IAdminService adminService,ICommonService commonService) {
+    public UserService(StUserMapper stUserMapper, IAdminService adminService) {
         this.stUserMapper = stUserMapper;
         this.adminService = adminService;
-        this.commonService = commonService;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class UserService implements IUserService {
                         errorCode=0;
                         success = false;
                     } else {
-                        if (stUserInDb.getUpsswd().equals(stUser.getUpsswd())) {
+                        if (stUserInDb.getUpsswd().equals(utils.toMd5HashString(stUser.getUpsswd()))) {
                             msg = "欢迎你" + stUser.getUname();
                             success = true;
                             httpSession.setAttribute("uname", stUserInDb.getUname());
@@ -91,7 +89,7 @@ public class UserService implements IUserService {
                         errorCode=0;
                         success = false;
                     } else {
-                        if (adminInDb.getApsswd().equals(admin.getApsswd())) {
+                        if (adminInDb.getApsswd().equals(utils.toMd5HashString(admin.getApsswd()))) {
                             msg = "欢迎你" + admin.getAname();
                             model.addAttribute("uname", adminInDb.getAname());
                             httpSession.setAttribute("uname", adminInDb.getAname());
@@ -119,12 +117,11 @@ public class UserService implements IUserService {
         HttpSession httpSession = httpServletRequest.getSession();
         if (!httpServletRequest.getParameter("uname").equals("")) {
             String msg = "";
-            boolean success;
-            int a=0;
+            int a;
             StUser stUser = new StUser();
             stUser.setUname(httpServletRequest.getParameter("uname"));
             if (login(stUser) == null) {
-                stUser.setUpsswd(httpServletRequest.getParameter("upsswd"));
+                stUser.setUpsswd(utils.toMd5HashString(httpServletRequest.getParameter("upsswd")));
                 stUser.setUprofile("这个人很懒，什么都没写哦");
                 stUserMapper.insert(stUser);
                 httpSession.setAttribute("uname", stUser.getUname());
@@ -133,12 +130,10 @@ public class UserService implements IUserService {
                 httpSession.setMaxInactiveInterval(600);
                 model.addAttribute("uname", stUser.getUname());
                 model.addAttribute("uprofile", stUser.getUprofile());
-                success = true;
                 a=1;
             }
             else {
                 msg = "用户名已存在!";
-                success = false;
                 a=0;
             }
             model.addAttribute("msg", msg);
@@ -152,7 +147,7 @@ public class UserService implements IUserService {
     @Override
     public String resetInfo(HttpServletRequest httpServletRequest) {
         HttpSession httpSession=httpServletRequest.getSession();
-        int code=0;
+        int code;
         if(utils.isUserLogin(httpServletRequest)){
             String upsswd=httpServletRequest.getParameter("upsswd");
             StUser stUser=new StUser();
@@ -162,11 +157,11 @@ public class UserService implements IUserService {
                 code=1;
                 stUserMapper.updateByPrimaryKeySelective(stUser);
             }else {
-                if(upsswd.equals(stUserMapper.selectByPrimaryKey((int)(httpSession.getAttribute("uid"))).getUpsswd())){
+                if(utils.toMd5HashString(upsswd).equals(stUserMapper.selectByPrimaryKey((int)(httpSession.getAttribute("uid"))).getUpsswd())){
                     if(!httpServletRequest.getParameter("uprofile").equals("")){
                         stUser.setUprofile(httpServletRequest.getParameter("uprofile"));
                     }
-                    stUser.setUpsswd(httpServletRequest.getParameter("newPsswd"));
+                    stUser.setUpsswd(utils.toMd5HashString(httpServletRequest.getParameter("newPsswd")));
                     code=1;
                     stUserMapper.updateByPrimaryKeySelective(stUser);
                 }else {

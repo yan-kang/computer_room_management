@@ -1,10 +1,8 @@
 package com.kang.computer_room_management;
 
 import com.kang.computer_room_management.common.Utils;
-import com.kang.computer_room_management.common.domain.Computer;
-import com.kang.computer_room_management.common.domain.ComputerRoom;
-import com.kang.computer_room_management.common.domain.TableTest;
-import com.kang.computer_room_management.common.domain.TableTestExample;
+import com.kang.computer_room_management.common.domain.*;
+import com.kang.computer_room_management.mapper.AdminMapper;
 import com.kang.computer_room_management.mapper.ComputerMapper;
 import com.kang.computer_room_management.mapper.ComputerRoomMapper;
 import com.kang.computer_room_management.mapper.TableTestMapper;
@@ -30,6 +28,8 @@ class ComputerRoomManagementApplicationTests {
     Utils utils=new Utils();
     @Autowired
     IComputerService computerService;
+    @Autowired
+    AdminMapper adminMapper;
     @Test
     void contextLoads() {
 //        TableTest tableTest;
@@ -70,6 +70,11 @@ class ComputerRoomManagementApplicationTests {
 //                computerMapper.insert(computer);
 //            }
 //        }
+        //添加管理员账号
+        Admin admin = new Admin();
+        admin.setAname("admin");
+        admin.setApsswd(utils.toMd5HashString("admin"));
+        adminMapper.insert(admin);
 //        for(int i=50;i<600;i++){
 //            Computer computer=new Computer();
 //            computer.setCid(i);

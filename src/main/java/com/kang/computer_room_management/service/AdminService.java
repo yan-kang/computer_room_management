@@ -72,8 +72,8 @@ public class AdminService implements IAdminService {
             String newPsswd=httpServletRequest.getParameter("newPsswd");
             int aid=(int)httpSession.getAttribute("uid");
             Admin admin=adminMapper.selectByPrimaryKey(aid);
-            if(admin.getApsswd().equals(psswd)){
-                admin.setApsswd(newPsswd);
+            if(admin.getApsswd().equals(utils.toMd5HashString(psswd))){
+                admin.setApsswd(utils.toMd5HashString(newPsswd));
                 adminMapper.updateByPrimaryKeySelective(admin);
                 code=1;
             }else {

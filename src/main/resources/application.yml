@@ -12,7 +12,7 @@ spring:
 #参考链接：https://www.cnblogs.com/hellokuangshen/p/12503200.html
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/roommana?userSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://10.10.10.10:3306/roommana?userSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     password: 971112
     username: root
 

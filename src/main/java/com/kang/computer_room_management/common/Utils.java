@@ -5,10 +5,9 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -145,5 +144,26 @@ public class Utils {
         }else {
             return "无需处理";
         }
+    }
+
+    public String toMd5HashString(String str){
+        //加密算法
+        MessageDigest m= null;
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            m.update(str.getBytes("UTF8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        byte s[ ]=m.digest( );
+        String result="";
+        for (int j=0; j<s.length;j++){
+            result+=Integer.toHexString((0x000000ff & s[j]) | 0xffffff00).substring(6);
+        }
+        return result;
     }
 }

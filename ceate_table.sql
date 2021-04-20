@@ -1,4 +1,4 @@
-drop table st_user;
+drop table if exists st_user;
 create table st_user
 (
     uid      int unsigned auto_increment comment '用户id'
@@ -10,7 +10,7 @@ create table st_user
         unique (uname)
 );
 
-drop table admin;
+drop table if exists admin;
 create table admin
 (
     aid    int auto_increment comment '管理员id'
@@ -21,7 +21,7 @@ create table admin
         unique (aname)
 );
 
-drop table appointment_record;
+drop table if exists appointment_record;
 create table appointment_record
 (
     uid      int      not null comment '预约用户的id',
@@ -45,7 +45,7 @@ create table appointment_record
     info     varchar(255) null comment '申请理由'
 );
 
-drop table computer;
+drop table if exists computer;
 create table computer
 (
     cid     int unsigned auto_increment comment '机位id'
@@ -56,7 +56,7 @@ create table computer
 0：不可预约'
 );
 
-drop table computer_room;
+drop table if exists computer_room;
 create table computer_room
 (
     rid     int auto_increment comment '机房id'
@@ -67,7 +67,7 @@ create table computer_room
 1：不可预约'
 );
 
-drop table usage_record;
+drop table if exists usage_record;
 create table usage_record
 (
     uid int not null comment '用户id',
